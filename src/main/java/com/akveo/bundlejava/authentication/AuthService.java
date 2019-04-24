@@ -32,8 +32,8 @@ public class AuthService {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private WelcomeEmailService welcomeEmailService;
+//    @Autowired
+//    private WelcomeEmailService welcomeEmailService;
 
     Token register(RegisterRequest registerRequest) throws UserAlreadyExistsHttpException {
         try {
@@ -76,12 +76,12 @@ public class AuthService {
     }
 
     private void sendWelcomeMail(User user) {
-        try {
-            welcomeEmailService.send(user);
-            // That exception has to be handled here and shouldn't be mapped to HTTP exception.
-            // Because sending welcome email operation should never crash registration process.
-        } catch (SendMailException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
+//        try {
+//            welcomeEmailService.send(user);
+//            // That exception has to be handled here and shouldn't be mapped to HTTP exception.
+//            // Because sending welcome email operation should never crash registration process.
+//        } catch (SendMailException exception) {
+//            logger.error(exception.getMessage(), exception);
+//        }
     }
 }

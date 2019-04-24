@@ -8,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -19,10 +21,10 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "user_name", nullable = false)
@@ -41,17 +43,22 @@ public class User {
     @NotEmpty(message = "Please, provide a password")
     private String passwordHash;
 
-    @OneToMany
-    @JoinColumn(name = "roles", nullable = false)
-    private List<Role> roles;
 
-    @Column(name = "address_street", nullable = false)
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    @Column(name = "address_street")
     private String addressStreet;
 
-    @Column(name = "address_city", nullable = false)
+    @Column(name = "address_city")
     private String addressCity;
 
-    @Column(name = "address_zip_code", nullable = false)
+    @Column(name = "address_zip_code")
     private String addressZipCode;
 
     @Column(name = "address_lat")
@@ -126,11 +133,11 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
