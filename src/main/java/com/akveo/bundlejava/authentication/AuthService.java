@@ -3,7 +3,6 @@ package com.akveo.bundlejava.authentication;
 import com.akveo.bundlejava.authentication.exception.InvalidTokenHttpException;
 import com.akveo.bundlejava.authentication.exception.UserAlreadyExistsHttpException;
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
-import com.akveo.bundlejava.mailing.SendMailException;
 import com.akveo.bundlejava.user.User;
 import com.akveo.bundlejava.user.UserService;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
@@ -32,13 +31,9 @@ public class AuthService {
     @Autowired
     private TokenService tokenService;
 
-//    @Autowired
-//    private WelcomeEmailService welcomeEmailService;
-
     Token register(RegisterRequest registerRequest) throws UserAlreadyExistsHttpException {
         try {
             User user = userService.register(registerRequest);
-            sendWelcomeMail(user);
             return createToken(user);
         } catch (UserAlreadyExistsException exception) {
             throw new UserAlreadyExistsHttpException();
@@ -75,13 +70,4 @@ public class AuthService {
         return tokenService.createToken(user);
     }
 
-    private void sendWelcomeMail(User user) {
-//        try {
-//            welcomeEmailService.send(user);
-//            // That exception has to be handled here and shouldn't be mapped to HTTP exception.
-//            // Because sending welcome email operation should never crash registration process.
-//        } catch (SendMailException exception) {
-//            logger.error(exception.getMessage(), exception);
-//        }
-    }
 }

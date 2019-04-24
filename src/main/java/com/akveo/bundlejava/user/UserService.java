@@ -1,6 +1,7 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.authentication.RegisterRequest;
+import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.HashSet;
 
 @Service
 public class UserService {
@@ -72,8 +75,11 @@ public class UserService {
 
         String encodedPassword = encodePassword(registerRequest.getPassword());
         user.setPasswordHash(encodedPassword);
-//        user.setTerms(registerRequest.getTerms());
-//        user.setAnnouncements(registerRequest.getAnnouncements());
+        user.setUserName(registerRequest.getFullName());
+
+        Role role = new Role();
+        role.setName("User");
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
 
         return user;
     }

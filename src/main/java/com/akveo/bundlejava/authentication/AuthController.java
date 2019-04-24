@@ -30,20 +30,32 @@ public class AuthController {
     @Autowired
     private ResetPasswordService resetPasswordService;
 
-    @PostMapping("/register")
-    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
-        Token token = authService.register(registerRequest);
-        return toResponse(token);
-    }
-
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
         Token token = authService.login(loginRequest);
         return toResponse(token);
     }
 
+    @PostMapping("/reset-pass")
+    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        resetPasswordService.resetPassword(resetPasswordRequest);
+        return ok(null);
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
+        Token token = authService.register(registerRequest);
+        return toResponse(token);
+    }
+
+    @PostMapping("/request-pass")
+    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        forgotPasswordService.forgotPassword(forgotPasswordRequest);
+        return ok(null);
+    }
+
     // TODO remove as soon as Nebular 3.3.0 released
-    @DeleteMapping("/logout")
+    @PostMapping("/sign-out")
     public ResponseEntity logout() {
         return ok(null);
     }
@@ -52,18 +64,6 @@ public class AuthController {
     public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         Token token = authService.refreshToken(refreshTokenRequest);
         return toResponse(token);
-    }
-
-    @PostMapping("/forgot-password")
-    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        forgotPasswordService.forgotPassword(forgotPasswordRequest);
-        return ok(null);
-    }
-
-    @PutMapping("/reset-password")
-    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        resetPasswordService.resetPassword(resetPasswordRequest);
-        return ok(null);
     }
 
     private ResponseEntity toResponse(Token token) {

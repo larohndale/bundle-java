@@ -7,6 +7,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class RegisterRequest {
+
+    @NotNull
+    @NotEmpty
+    private String fullName;
+
     @NotNull
     @NotEmpty
     @ValidEmail
@@ -17,10 +22,16 @@ public class RegisterRequest {
     private String password;
 
     @NotNull
-    @AssertTrue
-    private Boolean terms;
+    @NotEmpty
+    private String confirmPassword;
 
-    private Boolean announcements = false;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public String getEmail() {
         return email;
@@ -38,19 +49,11 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public Boolean getTerms() {
-        return terms;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setTerms(Boolean terms) {
-        this.terms = terms;
-    }
-
-    public Boolean getAnnouncements() {
-        return announcements;
-    }
-
-    public void setAnnouncements(Boolean announcements) {
-        this.announcements = announcements;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

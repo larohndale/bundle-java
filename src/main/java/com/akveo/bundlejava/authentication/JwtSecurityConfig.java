@@ -33,11 +33,11 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/reset-pass").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/sign-up").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/request-pass").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/sign-out").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/auth/logout").permitAll()
-                .antMatchers(HttpMethod.POST, "/auth/forgot-password").permitAll()
-                .antMatchers(HttpMethod.PUT, "/auth/reset-password").permitAll()
                 .anyRequest().authenticated();
 
         http.apply(new JwtConfigurer(tokenService));
