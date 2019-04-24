@@ -1,8 +1,6 @@
 package com.akveo.bundlejava.authentication;
 
-import com.akveo.bundlejava.email.ValidEmail;
-
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +12,7 @@ public class RegisterRequest {
 
     @NotNull
     @NotEmpty
-    @ValidEmail
+    @Email
     private String email;
 
     @NotNull
