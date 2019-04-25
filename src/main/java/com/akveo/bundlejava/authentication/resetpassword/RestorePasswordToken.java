@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class ResetPasswordToken {
+public class RestorePasswordToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

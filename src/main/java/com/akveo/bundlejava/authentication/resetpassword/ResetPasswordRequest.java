@@ -6,25 +6,25 @@ import javax.validation.constraints.NotNull;
 public class ResetPasswordRequest {
     @NotNull
     @NotEmpty
-    private String token;
+    private String newPassword;
 
     @NotNull
     @NotEmpty
-    private String password;
+    private String confirmPassword;
 
-    public String getToken() {
-        return token;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
-    public String getPassword() {
-        return password;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

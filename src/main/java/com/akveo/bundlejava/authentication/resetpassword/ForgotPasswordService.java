@@ -28,7 +28,7 @@ public class ForgotPasswordService {
     private UserService userService;
 
     @Autowired
-    private ResetPasswordTokenRepository resetPasswordTokenRepository;
+    private RestorePasswordTokenRepository restorePasswordTokenRepository;
 
     @Value("${client.url}")
     private String clientUrl;
@@ -46,11 +46,11 @@ public class ForgotPasswordService {
         }
 
         // generate reset password token
-        ResetPasswordToken token = new ResetPasswordToken();
+        RestorePasswordToken token = new RestorePasswordToken();
         token.setToken(UUID.randomUUID().toString());
         token.setUser(user);
         token.setExpiresIn(this.calculateExpirationDate(resetPasswordTokenExpiration));
-        resetPasswordTokenRepository.save(token);
+        restorePasswordTokenRepository.save(token);
 
         // send reset password token via email
         try {
@@ -66,15 +66,15 @@ public class ForgotPasswordService {
         return LocalDateTime.now().plusMinutes(tokenExpirationDuration.toMinutes());
     }
 
-    private String createResetUrl(ResetPasswordToken resetPasswordToken) throws JsonProcessingException {
+    private String createResetUrl(RestorePasswordToken restorePasswordToken) throws JsonProcessingException {
         // create reset password token dto
-        ResetPasswordTokenDto resetPasswordTokenDto = new ResetPasswordTokenDto();
-        resetPasswordTokenDto.setExpiryDate(resetPasswordToken.getExpiresIn());
-        resetPasswordTokenDto.setToken(resetPasswordToken.getToken());
+        RestorePasswordTokenDto restorePasswordTokenDto = new RestorePasswordTokenDto();
+        restorePasswordTokenDto.setExpiryDate(restorePasswordToken.getExpiresIn());
+        restorePasswordTokenDto.setToken(restorePasswordToken.getToken());
 
         // map token dto to json
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonToken = objectMapper.writeValueAsString(resetPasswordTokenDto);
+        String jsonToken = objectMapper.writeValueAsString(restorePasswordTokenDto);
 
         // encode with base64
         String encodedToken = Base64.getEncoder().encodeToString(jsonToken.getBytes());

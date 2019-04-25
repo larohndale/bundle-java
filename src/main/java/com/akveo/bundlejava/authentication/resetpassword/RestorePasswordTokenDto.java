@@ -2,7 +2,7 @@ package com.akveo.bundlejava.authentication.resetpassword;
 
 import java.time.LocalDateTime;
 
-public class ResetPasswordTokenDto {
+public class RestorePasswordTokenDto {
     private String token;
 
     private LocalDateTime expiryDate;

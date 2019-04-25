@@ -1,9 +1,6 @@
 package com.akveo.bundlejava.authentication;
 
-import com.akveo.bundlejava.authentication.resetpassword.ForgotPasswordRequest;
-import com.akveo.bundlejava.authentication.resetpassword.ForgotPasswordService;
-import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordRequest;
-import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordService;
+import com.akveo.bundlejava.authentication.resetpassword.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +25,9 @@ public class AuthController {
     private ForgotPasswordService forgotPasswordService;
 
     @Autowired
+    private RestorePasswordService restorePasswordService;
+
+    @Autowired
     private ResetPasswordService resetPasswordService;
 
     @PostMapping("/login")
@@ -36,9 +36,9 @@ public class AuthController {
         return toResponse(token);
     }
 
-    @PostMapping("/reset-pass")
-    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        resetPasswordService.resetPassword(resetPasswordRequest);
+    @PostMapping("/restore-pass")
+    public ResponseEntity resetPassword(@Valid @RequestBody RestorePasswordRequest restorePasswordRequest) {
+        restorePasswordService.resetPassword(restorePasswordRequest);
         return ok(null);
     }
 
@@ -57,6 +57,12 @@ public class AuthController {
     // TODO remove as soon as Nebular 3.3.0 released
     @PostMapping("/sign-out")
     public ResponseEntity logout() {
+        return ok(null);
+    }
+
+    @PostMapping("/reset-pass")
+    public ResponseEntity resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        resetPasswordService.resetPassword(resetPasswordRequest);
         return ok(null);
     }
 
