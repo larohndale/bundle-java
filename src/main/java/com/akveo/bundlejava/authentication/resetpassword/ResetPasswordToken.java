@@ -4,7 +4,7 @@ package com.akveo.bundlejava.authentication.resetpassword;
 import com.akveo.bundlejava.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class ResetPasswordToken {
@@ -21,7 +21,7 @@ public class ResetPasswordToken {
     private User user;
 
     @Column(nullable = false)
-    private Date expiresIn;
+    private LocalDateTime expiresIn;
 
     public Long getId() {
         return id;
@@ -47,15 +47,15 @@ public class ResetPasswordToken {
         this.user = user;
     }
 
-    public Date getExpiresIn() {
+    public LocalDateTime getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(Date expiresIn) {
+    public void setExpiresIn(LocalDateTime expiresIn) {
         this.expiresIn = expiresIn;
     }
 
     public boolean isExpired() {
-        return new Date().after(this.expiresIn);
+        return LocalDateTime.now().isAfter(this.expiresIn);
     }
 }

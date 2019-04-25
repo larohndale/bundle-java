@@ -14,9 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -63,10 +62,8 @@ public class ForgotPasswordService {
         }
     }
 
-    private Date calculateExpirationDate(Duration tokenExpirationDuration) {
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.MINUTE, (int) tokenExpirationDuration.toMinutes());
-        return now.getTime();
+    private LocalDateTime calculateExpirationDate(Duration tokenExpirationDuration) {
+        return LocalDateTime.now().plusMinutes(tokenExpirationDuration.toMinutes());
     }
 
     private String createResetUrl(ResetPasswordToken resetPasswordToken) throws JsonProcessingException {

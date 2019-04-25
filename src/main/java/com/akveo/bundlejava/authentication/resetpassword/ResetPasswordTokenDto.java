@@ -1,11 +1,11 @@
 package com.akveo.bundlejava.authentication.resetpassword;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ResetPasswordTokenDto {
     private String token;
 
-    private Date expiryDate;
+    private LocalDateTime expiryDate;
 
     public String getToken() {
         return token;
@@ -15,11 +15,11 @@ public class ResetPasswordTokenDto {
         this.token = token;
     }
 
-    public Date getExpiryDate() {
+    public LocalDateTime getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 }
