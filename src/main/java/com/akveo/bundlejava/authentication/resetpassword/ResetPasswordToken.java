@@ -4,7 +4,6 @@ package com.akveo.bundlejava.authentication.resetpassword;
 import com.akveo.bundlejava.user.User;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -54,12 +53,6 @@ public class ResetPasswordToken {
 
     public void setExpiresIn(Date expiresIn) {
         this.expiresIn = expiresIn;
-    }
-
-    public void setExpiryDate(int minutes) {
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.MINUTE, minutes);
-        this.expiresIn = now.getTime();
     }
 
     public boolean isExpired() {

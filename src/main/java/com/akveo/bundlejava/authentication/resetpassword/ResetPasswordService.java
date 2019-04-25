@@ -17,21 +17,21 @@ public class ResetPasswordService {
     private UserService userService;
 
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        ResetPasswordToken ResetPasswordToken =
+        ResetPasswordToken resetPasswordToken =
                 resetPasswordTokenRepository.findByToken(resetPasswordRequest.getToken());
 
-        if (Objects.isNull(ResetPasswordToken) || ResetPasswordToken.isExpired()) {
+        if (Objects.isNull(resetPasswordToken) || resetPasswordToken.isExpired()) {
             throw new TokenNotFoundOrExpiredHttpException();
         }
 
-        changePassword(resetPasswordRequest, ResetPasswordToken);
-        resetPasswordTokenRepository.delete(ResetPasswordToken);
+        changePassword(resetPasswordRequest, resetPasswordToken);
+        resetPasswordTokenRepository.delete(resetPasswordToken);
     }
 
     private void changePassword(ResetPasswordRequest resetPasswordRequest,
-                                ResetPasswordToken ResetPasswordToken) {
+                                ResetPasswordToken resetPasswordToken) {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-        changePasswordRequest.setUser(ResetPasswordToken.getUser());
+        changePasswordRequest.setUser(resetPasswordToken.getUser());
         changePasswordRequest.setPassword(resetPasswordRequest.getPassword());
 
         userService.changePassword(changePasswordRequest);

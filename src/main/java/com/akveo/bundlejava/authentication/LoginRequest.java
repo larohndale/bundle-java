@@ -1,13 +1,11 @@
 package com.akveo.bundlejava.authentication;
 
-
-import com.akveo.bundlejava.email.ValidEmail;
-
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class LoginRequest {
-    @ValidEmail
+    @Email
     @NotEmpty
     @NotNull
     private String email;
