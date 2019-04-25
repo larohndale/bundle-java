@@ -1,16 +1,19 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.authentication.RegisterRequest;
+import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,7 +28,7 @@ public class UserService {
         User user = userRepository.findByEmail(email);
 
         if (user == null) {
-            throw new UserNotFoundException(email);
+            throw new UserNotFoundException("User with email: " + email + " not found");
         }
 
         return user;
@@ -64,6 +67,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDTO getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+
+        return convertUser(userOptional.get());
+    }
+
     private boolean emailExists(String email) {
         User user = userRepository.findByEmail(email);
         return user != null;
@@ -86,5 +99,12 @@ public class UserService {
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private UserDTO convertUser(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        return userDTO;
     }
 }
