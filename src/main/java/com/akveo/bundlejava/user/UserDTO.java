@@ -1,8 +1,9 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.address.AddressDTO;
+import com.akveo.bundlejava.role.Role;
 
-import java.util.List;
+import java.util.Set;
 
 public class UserDTO {
 
@@ -13,7 +14,7 @@ public class UserDTO {
     private String email;
     private Integer age;
     private AddressDTO addressDTO;
-    private List<String> roles;
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -71,11 +72,11 @@ public class UserDTO {
         this.addressDTO = addressDTO;
     }
 
-    public List<String> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }

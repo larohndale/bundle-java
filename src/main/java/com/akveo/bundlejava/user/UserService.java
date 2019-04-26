@@ -55,18 +55,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public void updateUser(UserUpdateRequest userUpdateRequest) {
-        User user = UserContextHolder.getUser();
-
-        // Update user details
-//        user.setFullName(userUpdateRequest.getFullName());
-//        user.setCompany(userUpdateRequest.getCompany());
-//        user.setRole(userUpdateRequest.getRole());
-
-        userRepository.save(user);
-    }
-
     public UserDTO getUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
 
@@ -75,6 +63,65 @@ public class UserService {
         }
 
         return convertUser(userOptional.get());
+    }
+
+    @Transactional
+    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundHttpException("User with id: " + userId + " not found", HttpStatus.NOT_FOUND);
+        }
+
+//        TODO add mappings
+        // Update user details
+        User user = new User();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setUserName(userDTO.getUserName());
+        user.setAge(userDTO.getAge());
+//        TODO Adress
+        user.setRoles(userDTO.getRoles());
+
+        userRepository.save(user);
+        return userDTO;
+    }
+
+    @Transactional
+    public boolean deleteUser(Long id) {
+//        TODO test if user not found
+        userRepository.deleteById(id);
+        return true;
+    }
+
+    public UserDTO getCurrentUser() {
+        User user = UserContextHolder.getUser();
+        return convertUser(user);
+    }
+
+//    TODO use common logic with previous update
+    public UserDTO updateCurrentUser(UserDTO userDTO) {
+        User user = UserContextHolder.getUser();
+        Long id = user.getId();
+
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+
+//        TODO add mappings
+        // Update user details
+        User modifiedUser = new User();
+        modifiedUser.setFirstName(userDTO.getFirstName());
+        modifiedUser.setLastName(userDTO.getLastName());
+        modifiedUser.setUserName(userDTO.getUserName());
+        modifiedUser.setAge(userDTO.getAge());
+//        TODO Adress
+        modifiedUser.setRoles(userDTO.getRoles());
+
+        userRepository.save(modifiedUser);
+        return userDTO;
     }
 
     private boolean emailExists(String email) {
