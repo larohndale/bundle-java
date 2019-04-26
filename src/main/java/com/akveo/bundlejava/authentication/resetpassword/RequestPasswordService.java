@@ -19,9 +19,9 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Service
-public class ForgotPasswordService {
+public class RequestPasswordService {
 
-    private Logger logger = LoggerFactory.getLogger(ForgotPasswordService.class);
+    private Logger logger = LoggerFactory.getLogger(RequestPasswordService.class);
 
 
     @Autowired
@@ -36,17 +36,17 @@ public class ForgotPasswordService {
     @Value("${client.resetPasswordTokenExpiration}")
     private Duration resetPasswordTokenExpiration;
 
-    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+    public void requestPassword(RequestPasswordDTO requestPasswordDTO) {
         User user;
 
         try {
-            user = userService.findByEmail(forgotPasswordRequest.getEmail());
+            user = userService.findByEmail(requestPasswordDTO.getEmail());
         } catch (UserNotFoundException exception) {
             throw new IncorrectEmailHttpException();
         }
 
         // generate reset password token
-        RestorePasswordToken token = new RestorePasswordToken();
+        RestorePassword token = new RestorePassword();
         token.setToken(UUID.randomUUID().toString());
         token.setUser(user);
         token.setExpiresIn(this.calculateExpirationDate(resetPasswordTokenExpiration));
@@ -66,11 +66,11 @@ public class ForgotPasswordService {
         return LocalDateTime.now().plusMinutes(tokenExpirationDuration.toMinutes());
     }
 
-    private String createResetUrl(RestorePasswordToken restorePasswordToken) throws JsonProcessingException {
+    private String createResetUrl(RestorePassword restorePassword) throws JsonProcessingException {
         // create reset password token dto
         RestorePasswordTokenDto restorePasswordTokenDto = new RestorePasswordTokenDto();
-        restorePasswordTokenDto.setExpiryDate(restorePasswordToken.getExpiresIn());
-        restorePasswordTokenDto.setToken(restorePasswordToken.getToken());
+        restorePasswordTokenDto.setExpiryDate(restorePassword.getExpiresIn());
+        restorePasswordTokenDto.setToken(restorePassword.getToken());
 
         // map token dto to json
         ObjectMapper objectMapper = new ObjectMapper();

@@ -2,7 +2,7 @@ package com.akveo.bundlejava.authentication;
 
 import javax.validation.constraints.NotNull;
 
-public class RefreshTokenRequest {
+public class RefreshTokenDTO {
     @NotNull
     private Token token;
 
