@@ -3,7 +3,7 @@ package com.akveo.bundlejava.authentication.resetpassword;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-public class ForgotPasswordRequest {
+public class RequestPasswordDTO {
     @Email
     @NotEmpty
     private String email;

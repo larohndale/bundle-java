@@ -13,14 +13,14 @@ public class ResetPasswordService {
     @Autowired
     private UserService userService;
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        if (!resetPasswordRequest.getConfirmPassword().equals(resetPasswordRequest.getNewPassword())) {
+    public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getNewPassword())) {
             throw new PasswordsDontMatchException();
         }
 
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
         changePasswordRequest.setUser(UserContextHolder.getUser());
-        changePasswordRequest.setPassword(resetPasswordRequest.getNewPassword());
+        changePasswordRequest.setPassword(resetPasswordDTO.getNewPassword());
         userService.changePassword(changePasswordRequest);
     }
 

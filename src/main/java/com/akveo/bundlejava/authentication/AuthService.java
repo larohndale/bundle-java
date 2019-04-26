@@ -32,18 +32,18 @@ public class AuthService {
     @Autowired
     private TokenService tokenService;
 
-    Token register(RegisterRequest registerRequest) throws UserAlreadyExistsHttpException {
+    Token register(SignUpDTO signUpDTO) throws UserAlreadyExistsHttpException {
         try {
-            User user = userService.register(registerRequest);
+            User user = userService.register(signUpDTO);
             return createToken(user);
         } catch (UserAlreadyExistsException exception) {
             throw new UserAlreadyExistsHttpException();
         }
     }
 
-    Token login(LoginRequest loginRequest) throws UserNotFoundHttpException {
+    Token login(LoginDTO loginDTO) throws UserNotFoundHttpException {
         try {
-            Authentication authentication = createAuthentication(loginRequest);
+            Authentication authentication = createAuthentication(loginDTO);
             BundleUserDetailsService.BundleUserDetails userDetails =
                     (BundleUserDetailsService.BundleUserDetails) authenticationManager.authenticate(authentication).getPrincipal();
             User user = userDetails.getUser();
@@ -53,9 +53,9 @@ public class AuthService {
         }
     }
 
-    Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws InvalidTokenHttpException {
+    Token refreshToken(RefreshTokenDTO refreshTokenDTO) throws InvalidTokenHttpException {
         try {
-            String email = tokenService.getEmailFromRefreshToken(refreshTokenRequest.getToken().getRefreshToken());
+            String email = tokenService.getEmailFromRefreshToken(refreshTokenDTO.getToken().getRefreshToken());
             User user = userService.findByEmail(email);
             return createToken(user);
         } catch (JwtException | UserNotFoundException e) {
@@ -63,8 +63,8 @@ public class AuthService {
         }
     }
 
-    private Authentication createAuthentication(LoginRequest loginRequest) {
-        return new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+    private Authentication createAuthentication(LoginDTO loginDTO) {
+        return new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
     }
 
     private Token createToken(User user) {

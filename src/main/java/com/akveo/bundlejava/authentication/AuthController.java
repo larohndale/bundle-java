@@ -22,7 +22,7 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
-    private ForgotPasswordService forgotPasswordService;
+    private RequestPasswordService requestPasswordService;
 
     @Autowired
     private RestorePasswordService restorePasswordService;
@@ -31,44 +31,43 @@ public class AuthController {
     private ResetPasswordService resetPasswordService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
-        Token token = authService.login(loginRequest);
+    public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) {
+        Token token = authService.login(loginDTO);
         return toResponse(token);
     }
 
     @PostMapping("/restore-pass")
-    public ResponseEntity resetPassword(@Valid @RequestBody RestorePasswordRequest restorePasswordRequest) {
-        restorePasswordService.resetPassword(restorePasswordRequest);
+    public ResponseEntity restorePassword(@Valid @RequestBody RestorePasswordDTO restorePasswordDTO) {
+        restorePasswordService.restorePassword(restorePasswordDTO);
         return ok(null);
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
-        Token token = authService.register(registerRequest);
+    public ResponseEntity register(@Valid @RequestBody SignUpDTO signUpDTO) {
+        Token token = authService.register(signUpDTO);
         return toResponse(token);
     }
 
     @PostMapping("/request-pass")
-    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        forgotPasswordService.forgotPassword(forgotPasswordRequest);
+    public ResponseEntity requestPassword(@Valid @RequestBody RequestPasswordDTO requestPasswordDTO) {
+        requestPasswordService.requestPassword(requestPasswordDTO);
         return ok(null);
     }
 
-    // TODO remove as soon as Nebular 3.3.0 released
     @PostMapping("/sign-out")
     public ResponseEntity logout() {
         return ok(null);
     }
 
     @PostMapping("/reset-pass")
-    public ResponseEntity resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-        resetPasswordService.resetPassword(resetPasswordRequest);
+    public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        resetPasswordService.resetPassword(resetPasswordDTO);
         return ok(null);
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        Token token = authService.refreshToken(refreshTokenRequest);
+    public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
+        Token token = authService.refreshToken(refreshTokenDTO);
         return toResponse(token);
     }
 

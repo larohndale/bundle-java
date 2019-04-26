@@ -1,6 +1,7 @@
 package com.akveo.bundlejava.user;
 
-import com.akveo.bundlejava.authentication.RegisterRequest;
+import com.akveo.bundlejava.authentication.SignUpDTO;
+import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
@@ -39,12 +40,16 @@ public class UserService {
     }
 
     @Transactional
-    public User register(RegisterRequest registerRequest) throws UserAlreadyExistsException {
-        if (emailExists(registerRequest.getEmail())) {
-            throw new UserAlreadyExistsException(registerRequest.getEmail());
+    public User register(SignUpDTO signUpDTO) throws UserAlreadyExistsException {
+        if (!signUpDTO.getPassword().equals(signUpDTO.getConfirmPassword())) {
+            throw new PasswordsDontMatchException();
         }
 
-        User user = createUser(registerRequest);
+        if (emailExists(signUpDTO.getEmail())) {
+            throw new UserAlreadyExistsException(signUpDTO.getEmail());
+        }
+
+        User user = createUser(signUpDTO);
 
         return userRepository.save(user);
     }
@@ -111,13 +116,13 @@ public class UserService {
         return user != null;
     }
 
-    private User createUser(RegisterRequest registerRequest) {
+    private User createUser(SignUpDTO signUpDTO) {
         User user = new User();
-        user.setEmail(registerRequest.getEmail());
+        user.setEmail(signUpDTO.getEmail());
+        user.setUserName(signUpDTO.getFullName());
 
-        String encodedPassword = encodePassword(registerRequest.getPassword());
+        String encodedPassword = encodePassword(signUpDTO.getPassword());
         user.setPasswordHash(encodedPassword);
-        user.setUserName(registerRequest.getFullName());
 
         Role role = new Role();
         role.setName("User");

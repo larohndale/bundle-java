@@ -1,5 +1,6 @@
 package com.akveo.bundlejava.authentication.resetpassword;
 
+import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.resetpassword.exception.TokenNotFoundOrExpiredHttpException;
 import com.akveo.bundlejava.user.ChangePasswordRequest;
 import com.akveo.bundlejava.user.UserService;
@@ -16,23 +17,27 @@ public class RestorePasswordService {
     @Autowired
     private UserService userService;
 
-    public void resetPassword(RestorePasswordRequest restorePasswordRequest) {
-        RestorePasswordToken restorePasswordToken =
-                restorePasswordTokenRepository.findByToken(restorePasswordRequest.getToken());
+    public void restorePassword(RestorePasswordDTO restorePasswordDTO) {
+        if (!restorePasswordDTO.getNewPassword().equals(restorePasswordDTO.getConfirmPassword())) {
+            throw new PasswordsDontMatchException();
+        }
 
-        if (Objects.isNull(restorePasswordToken) || restorePasswordToken.isExpired()) {
+        RestorePassword restorePassword =
+                restorePasswordTokenRepository.findByToken(restorePasswordDTO.getToken());
+
+        if (Objects.isNull(restorePassword) || restorePassword.isExpired()) {
             throw new TokenNotFoundOrExpiredHttpException();
         }
 
-        changePassword(restorePasswordRequest, restorePasswordToken);
-        restorePasswordTokenRepository.delete(restorePasswordToken);
+        changePassword(restorePasswordDTO, restorePassword);
+        restorePasswordTokenRepository.delete(restorePassword);
     }
 
-    private void changePassword(RestorePasswordRequest restorePasswordRequest,
-                                RestorePasswordToken restorePasswordToken) {
+    private void changePassword(RestorePasswordDTO restorePasswordDTO,
+                                RestorePassword restorePassword) {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-        changePasswordRequest.setUser(restorePasswordToken.getUser());
-        changePasswordRequest.setPassword(restorePasswordRequest.getPassword());
+        changePasswordRequest.setUser(restorePassword.getUser());
+        changePasswordRequest.setPassword(restorePasswordDTO.getNewPassword());
 
         userService.changePassword(changePasswordRequest);
     }

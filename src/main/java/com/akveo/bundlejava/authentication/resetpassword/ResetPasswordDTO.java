@@ -3,12 +3,7 @@ package com.akveo.bundlejava.authentication.resetpassword;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class RestorePasswordDTO {
-
-    @NotNull
-    @NotEmpty
-    private String token;
-
+public class ResetPasswordDTO {
     @NotNull
     @NotEmpty
     private String newPassword;
@@ -16,14 +11,6 @@ public class RestorePasswordDTO {
     @NotNull
     @NotEmpty
     private String confirmPassword;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public String getNewPassword() {
         return newPassword;
