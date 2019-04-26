@@ -17,13 +17,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return ok(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(id, userDTO);
+        UserDTO updatedUser = userService.updateUserById(id, userDTO);
         return ok(updatedUser);
     }
 

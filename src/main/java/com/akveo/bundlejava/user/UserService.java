@@ -5,6 +5,7 @@ import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public User findByEmail(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -62,29 +66,12 @@ public class UserService {
             throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
 
-        return convertUser(userOptional.get());
+        return modelMapper.map(userOptional.get(), UserDTO.class);
     }
 
     @Transactional
-    public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundHttpException("User with id: " + userId + " not found", HttpStatus.NOT_FOUND);
-        }
-
-//        TODO add mappings
-        // Update user details
-        User user = new User();
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setUserName(userDTO.getUserName());
-        user.setAge(userDTO.getAge());
-//        TODO Adress
-        user.setRoles(userDTO.getRoles());
-
-        userRepository.save(user);
-        return userDTO;
+    public UserDTO updateUserById(Long userId, UserDTO userDTO) {
+        return updateUser(userId, userDTO);
     }
 
     @Transactional
@@ -96,7 +83,7 @@ public class UserService {
 
     public UserDTO getCurrentUser() {
         User user = UserContextHolder.getUser();
-        return convertUser(user);
+        return modelMapper.map(user, UserDTO.class);
     }
 
 //    TODO use common logic with previous update
@@ -104,23 +91,18 @@ public class UserService {
         User user = UserContextHolder.getUser();
         Long id = user.getId();
 
+        return updateUser(id, userDTO);
+    }
+
+    private UserDTO updateUser(Long id, UserDTO userDTO) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (!userOptional.isPresent()) {
             throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
 
-//        TODO add mappings
-        // Update user details
-        User modifiedUser = new User();
-        modifiedUser.setFirstName(userDTO.getFirstName());
-        modifiedUser.setLastName(userDTO.getLastName());
-        modifiedUser.setUserName(userDTO.getUserName());
-        modifiedUser.setAge(userDTO.getAge());
-//        TODO Adress
-        modifiedUser.setRoles(userDTO.getRoles());
+        userRepository.save(modelMapper.map(userDTO, User.class));
 
-        userRepository.save(modifiedUser);
         return userDTO;
     }
 
@@ -148,10 +130,4 @@ public class UserService {
         return passwordEncoder.encode(password);
     }
 
-    private UserDTO convertUser(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        return userDTO;
-    }
 }
