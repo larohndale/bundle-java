@@ -41,7 +41,6 @@ public class User {
     @NotEmpty(message = "Please, provide a password")
     private String passwordHash;
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

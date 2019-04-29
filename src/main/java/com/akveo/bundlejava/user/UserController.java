@@ -19,10 +19,11 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity getUser(@PathVariable Long id) {
         return ok(userService.getUserById(id));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUserById(id, userDTO);
@@ -45,11 +46,10 @@ public class UserController {
         return ok(updatedUser);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity createUser(@Valid @RequestBody UserDTO userDTO) {
-//        TODO complete
-//        userService.register()
-        return ok(null);
+    public ResponseEntity createUsers(@Valid @RequestBody UserDTO userDTO) {
+        return ok(userService.createUser(userDTO));
     }
 
 }

@@ -14,6 +14,9 @@ public class Role {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "is_default")
+    private boolean isDefault = false;
+
     public Long getId() {
         return id;
     }
@@ -28,5 +31,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 }
