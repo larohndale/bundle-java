@@ -13,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -106,7 +104,13 @@ public class UserService {
             throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
         }
 
-        userRepository.save(modelMapper.map(userDTO, User.class));
+        User existingUser = userOptional.get();
+
+        User updatedUser = modelMapper.map(userDTO, User.class);
+        updatedUser.setId(id);
+        updatedUser.setPasswordHash(existingUser.getPasswordHash());
+
+        userRepository.save(updatedUser);
 
         return userDTO;
     }
@@ -126,7 +130,6 @@ public class UserService {
 
         Role role = new Role();
         role.setName("User");
-        user.setRoles(new HashSet<>(Collections.singletonList(role)));
 
         return user;
     }

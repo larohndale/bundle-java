@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -49,22 +48,22 @@ public class User {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @Column(name = "address_street")
-    private String addressStreet;
+    private String street;
 
     @Column(name = "address_city")
-    private String addressCity;
+    private String city;
 
     @Column(name = "address_zip_code")
-    private String addressZipCode;
+    private String zipCode;
 
     @Column(name = "address_lat")
-    private Double addressLat;
+    private Double lat;
 
     @Column(name = "address_lng")
-    private Double addressLng;
+    private Double lng;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -138,44 +137,44 @@ public class User {
         this.roles = roles;
     }
 
-    public String getAddressStreet() {
-        return addressStreet;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddressStreet(String addressStreet) {
-        this.addressStreet = addressStreet;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public String getAddressCity() {
-        return addressCity;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddressCity(String addressCity) {
-        this.addressCity = addressCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getAddressZipCode() {
-        return addressZipCode;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setAddressZipCode(String addressZipCode) {
-        this.addressZipCode = addressZipCode;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
-    public Double getAddressLat() {
-        return addressLat;
+    public Double getLat() {
+        return lat;
     }
 
-    public void setAddressLat(Double addressLat) {
-        this.addressLat = addressLat;
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 
-    public Double getAddressLng() {
-        return addressLng;
+    public Double getLng() {
+        return lng;
     }
 
-    public void setAddressLng(Double addressLng) {
-        this.addressLng = addressLng;
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 
     public LocalDateTime getCreatedAt() {
