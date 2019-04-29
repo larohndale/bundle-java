@@ -1,16 +1,18 @@
 package com.akveo.bundlejava.authentication;
 
+import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
 import com.akveo.bundlejava.user.UserService;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.*;
 
 @Service
 public class BundleUserDetailsService implements UserDetailsService {
@@ -22,22 +24,36 @@ public class BundleUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
             User user = userService.findByEmail(email);
-            return new BundleUserDetails(user);
+            return new BundleUserDetails(user, getAuthorities(user.getRoles()));
         } catch (UserNotFoundException exception) {
             throw new UsernameNotFoundException("Username: " + email + " not found");
         }
     }
 
+    private List<GrantedAuthority> getAuthorities(Collection<Role> roles) {
+        return getGrantedAuthorities(roles);
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(Collection<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
+    }
+
     public class BundleUserDetails implements UserDetails {
         private User user;
+        private List<GrantedAuthority> authorities;
 
-        BundleUserDetails(User user) {
+        BundleUserDetails(User user, List<GrantedAuthority> authorities) {
             this.user = user;
+            this.authorities = authorities;
         }
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return null;
+            return authorities;
         }
 
         @Override
