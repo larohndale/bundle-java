@@ -13,7 +13,9 @@ import com.akveo.bundlejava.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class RestorePasswordService {
@@ -37,6 +39,17 @@ public class RestorePasswordService {
 
         changePassword(restorePasswordDTO, restorePassword);
         restorePasswordTokenRepository.delete(restorePassword);
+    }
+
+    public void removeExpiredRestorePasswordTokens(){
+        List<RestorePassword> restorePasswordList = restorePasswordTokenRepository.findAll();
+
+        if (!restorePasswordList.isEmpty()) {
+            restorePasswordTokenRepository.deleteRestorePasswordWithIds(
+                    restorePasswordList.stream()
+                            .map(RestorePassword::getId)
+                            .collect(Collectors.toList()));
+        }
     }
 
     private void changePassword(RestorePasswordDTO restorePasswordDTO,

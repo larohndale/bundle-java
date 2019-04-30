@@ -8,8 +8,10 @@ package com.akveo.bundlejava;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class BundleJavaApplication {
 
 	public static void main(String[] args) {

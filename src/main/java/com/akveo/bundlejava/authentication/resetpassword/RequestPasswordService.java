@@ -29,7 +29,6 @@ public class RequestPasswordService {
 
     private Logger logger = LoggerFactory.getLogger(RequestPasswordService.class);
 
-
     @Autowired
     private UserService userService;
 
@@ -39,7 +38,7 @@ public class RequestPasswordService {
     @Value("${client.url}")
     private String clientUrl;
 
-    @Value("${client.resetPasswordTokenExpiration}")
+    @Value("${client.resetPasswordToken.expiration}")
     private Duration resetPasswordTokenExpiration;
 
     public void requestPassword(RequestPasswordDTO requestPasswordDTO) {
