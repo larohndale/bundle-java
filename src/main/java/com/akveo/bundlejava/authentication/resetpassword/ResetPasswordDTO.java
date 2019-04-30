@@ -12,18 +12,18 @@ import javax.validation.constraints.NotNull;
 public class ResetPasswordDTO {
     @NotNull
     @NotEmpty
-    private String newPassword;
+    private String password;
 
     @NotNull
     @NotEmpty
     private String confirmPassword;
 
-    public String getNewPassword() {
-        return newPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getConfirmPassword() {

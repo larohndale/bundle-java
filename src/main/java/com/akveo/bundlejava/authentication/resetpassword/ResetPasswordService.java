@@ -20,13 +20,13 @@ public class ResetPasswordService {
     private UserService userService;
 
     public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
-        if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getNewPassword())) {
+        if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getPassword())) {
             throw new PasswordsDontMatchException();
         }
 
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
         changePasswordRequest.setUser(UserContextHolder.getUser());
-        changePasswordRequest.setPassword(resetPasswordDTO.getNewPassword());
+        changePasswordRequest.setPassword(resetPasswordDTO.getPassword());
         userService.changePassword(changePasswordRequest);
     }
 

@@ -21,7 +21,7 @@ public class Role {
     private String name;
 
     @Column(name = "is_default")
-    private boolean isDefault = false;
+    private Boolean isDefault = false;
 
     public Long getId() {
         return id;

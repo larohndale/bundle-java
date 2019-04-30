@@ -85,6 +85,6 @@ public class RequestPasswordService {
         // encode with base64
         String encodedToken = Base64.getEncoder().encodeToString(jsonToken.getBytes());
 
-        return clientUrl + "/auth/reset-pass?token=" + encodedToken;
+        return clientUrl + "/auth/restore-pass?token=" + encodedToken;
     }
 }

@@ -46,7 +46,7 @@ public class UserController {
         return ok(userService.getCurrentUser());
     }
 
-    @PutMapping("/{current")
+    @PutMapping("/current")
     public ResponseEntity updateCurrentUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateCurrentUser(userDTO);
         return ok(updatedUser);
