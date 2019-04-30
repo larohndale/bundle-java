@@ -15,6 +15,14 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenService tokenService;
 
+    private static final String[] AUTH_WHITELIST = {
+            // -- swagger ui
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -36,6 +44,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/request-pass").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/sign-out").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
 
         http.apply(new JwtConfigurer(tokenService));
