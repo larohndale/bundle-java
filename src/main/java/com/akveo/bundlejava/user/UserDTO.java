@@ -18,7 +18,7 @@ public class UserDTO {
     private String userName;
     private String email;
     private Integer age;
-    private AddressDTO addressDTO;
+    private AddressDTO address;
     private Set<String> roles;
 
     public Long getId() {
@@ -69,12 +69,12 @@ public class UserDTO {
         this.age = age;
     }
 
-    public AddressDTO getAddressDTO() {
-        return addressDTO;
+    public AddressDTO getAddress() {
+        return address;
     }
 
-    public void setAddressDTO(AddressDTO addressDTO) {
-        this.addressDTO = addressDTO;
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 
     public Set<String> getRoles() {
