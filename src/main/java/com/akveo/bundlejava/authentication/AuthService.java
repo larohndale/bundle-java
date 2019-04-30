@@ -14,8 +14,6 @@ import com.akveo.bundlejava.user.UserService;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import io.jsonwebtoken.JwtException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-
-    private Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserService userService;
