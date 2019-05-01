@@ -143,7 +143,6 @@ public class UserService {
         // Current version doesn't update roles
         updatedUser.setRoles(existingUser.getRoles());
 
-
         userRepository.save(updatedUser);
 
         return modelMapper.map(updatedUser, UserDTO.class);
