@@ -32,7 +32,9 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            // -- h2 database console
+            "/h2-console/**"
     };
 
     @Autowired
@@ -72,6 +74,9 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(new JwtConfigurer(tokenService));
 
         http.cors().and();
+
+        // Allows frame same origin. Uses for h2 console. Should be removed after integrating with real database.
+        http.headers().frameOptions().sameOrigin();
     }
 
     @Bean
