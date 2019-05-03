@@ -16,10 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestorePasswordJob {
 
-    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(RestorePasswordJob.class);
+
     private RestorePasswordService restorePasswordService;
 
-    private static final Logger logger = LoggerFactory.getLogger(RestorePasswordJob.class);
+    @Autowired
+    public RestorePasswordJob(RestorePasswordService restorePasswordService) {
+        this.restorePasswordService = restorePasswordService;
+    }
 
     @Scheduled(cron = "${client.resetPasswordToken.clearJob}")
     public void reportCurrentTime() {

@@ -25,14 +25,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
+    private TokenService tokenService;
 
     @Autowired
-    private TokenService tokenService;
+    public AuthService(UserService userService,
+                       AuthenticationManager authenticationManager,
+                       TokenService tokenService) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
 
     Token register(SignUpDTO signUpDTO) throws UserAlreadyExistsHttpException {
         try {

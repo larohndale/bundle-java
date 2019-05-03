@@ -16,8 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResetPasswordService {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public ResetPasswordService(UserService userService) {
+        this.userService = userService;
+    }
 
     public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
         if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getPassword())) {

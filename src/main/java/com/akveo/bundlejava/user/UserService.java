@@ -28,17 +28,21 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private ModelMapper modelMapper;
+    private RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       ModelMapper modelMapper,
+                       RoleService roleService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+        this.roleService = roleService;
+    }
 
     public User findByEmail(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email);

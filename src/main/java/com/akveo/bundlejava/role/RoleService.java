@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleService {
 
-    @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     public Role getDefaultRole() {
         return roleRepository.findDefault();

@@ -29,11 +29,15 @@ public class RequestPasswordService {
 
     private Logger logger = LoggerFactory.getLogger(RequestPasswordService.class);
 
-    @Autowired
     private UserService userService;
+    private RestorePasswordTokenRepository restorePasswordTokenRepository;
 
     @Autowired
-    private RestorePasswordTokenRepository restorePasswordTokenRepository;
+    public RequestPasswordService(UserService userService,
+                                  RestorePasswordTokenRepository restorePasswordTokenRepository) {
+        this.userService = userService;
+        this.restorePasswordTokenRepository = restorePasswordTokenRepository;
+    }
 
     @Value("${client.url}")
     private String clientUrl;

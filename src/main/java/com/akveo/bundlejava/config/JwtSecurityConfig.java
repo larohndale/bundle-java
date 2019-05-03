@@ -25,8 +25,7 @@ import java.util.Arrays;
 @Configuration
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
@@ -35,6 +34,16 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs",
             "/webjars/**"
     };
+
+    @Autowired
+    public JwtSecurityConfig(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
+    public JwtSecurityConfig(TokenService tokenService, boolean disableDefaults) {
+        super(disableDefaults);
+        this.tokenService = tokenService;
+    }
 
     @Bean
     @Override

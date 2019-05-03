@@ -23,8 +23,12 @@ import java.util.*;
 @Service
 public class BundleUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public BundleUserDetailsService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

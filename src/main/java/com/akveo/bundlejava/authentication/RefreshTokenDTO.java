@@ -6,9 +6,12 @@
 
 package com.akveo.bundlejava.authentication;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class RefreshTokenDTO {
+
+    @NotEmpty
     @NotNull
     private Token token;
 

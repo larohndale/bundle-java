@@ -19,11 +19,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class RestorePasswordService {
-    @Autowired
+
     private RestorePasswordTokenRepository restorePasswordTokenRepository;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    public RestorePasswordService(RestorePasswordTokenRepository restorePasswordTokenRepository,
+                                  UserService userService) {
+        this.restorePasswordTokenRepository = restorePasswordTokenRepository;
+        this.userService = userService;
+    }
 
     public void restorePassword(RestorePasswordDTO restorePasswordDTO) {
         if (!restorePasswordDTO.getNewPassword().equals(restorePasswordDTO.getConfirmPassword())) {

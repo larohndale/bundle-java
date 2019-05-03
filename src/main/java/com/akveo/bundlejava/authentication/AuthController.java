@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,17 +25,21 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final RequestPasswordService requestPasswordService;
+    private final RestorePasswordService restorePasswordService;
+    private final ResetPasswordService resetPasswordService;
 
     @Autowired
-    private RequestPasswordService requestPasswordService;
-
-    @Autowired
-    private RestorePasswordService restorePasswordService;
-
-    @Autowired
-    private ResetPasswordService resetPasswordService;
+    public AuthController(AuthService authService,
+                          RequestPasswordService requestPasswordService,
+                          RestorePasswordService restorePasswordService,
+                          ResetPasswordService resetPasswordService) {
+        this.authService = authService;
+        this.requestPasswordService = requestPasswordService;
+        this.restorePasswordService = restorePasswordService;
+        this.resetPasswordService = resetPasswordService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) {
@@ -78,9 +83,6 @@ public class AuthController {
     }
 
     private ResponseEntity toResponse(Token token) {
-        Map<String, Token> model = Stream.of(
-                new AbstractMap.SimpleEntry<>("token", token))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return ok(model);
+        return ok(Collections.singletonMap("token", token));
     }
 }

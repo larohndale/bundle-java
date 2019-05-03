@@ -35,8 +35,12 @@ public class TokenService {
     @Value("${jwt.refreshTokenValidityInMilliseconds}")
     private long refreshTokenValidityInMilliseconds;
 
-    @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    public TokenService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostConstruct
     protected void init() {
