@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.UUID;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Service
 public class RequestPasswordService {
 
@@ -86,7 +88,7 @@ public class RequestPasswordService {
         String jsonToken = objectMapper.writeValueAsString(restorePasswordTokenDto);
 
         // encode with base64
-        String encodedToken = Base64.getEncoder().encodeToString(jsonToken.getBytes());
+        String encodedToken = Base64.getEncoder().encodeToString(jsonToken.getBytes(UTF_8));
 
         return clientUrl + "/auth/restore-pass?token=" + encodedToken;
     }

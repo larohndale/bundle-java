@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Service
 public class TokenService {
     @Value("${jwt.accessTokenSecretKey}")
@@ -44,7 +46,7 @@ public class TokenService {
 
     @PostConstruct
     protected void init() {
-        accessTokenSecretKey = Base64.getEncoder().encodeToString(accessTokenSecretKey.getBytes());
+        accessTokenSecretKey = Base64.getEncoder().encodeToString(accessTokenSecretKey.getBytes(UTF_8));
     }
 
     Token createToken(User user) {

@@ -52,7 +52,7 @@ public class BundleUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    public class BundleUserDetails implements UserDetails {
+    public static class BundleUserDetails implements UserDetails {
         private User user;
         private List<GrantedAuthority> authorities;
 
