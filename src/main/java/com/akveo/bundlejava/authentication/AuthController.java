@@ -13,11 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.AbstractMap;
 import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -50,7 +46,7 @@ public class AuthController {
     @PostMapping("/restore-pass")
     public ResponseEntity restorePassword(@Valid @RequestBody RestorePasswordDTO restorePasswordDTO) {
         restorePasswordService.restorePassword(restorePasswordDTO);
-        return ok(null);
+        return ok("Password was restored");
     }
 
     @PostMapping("/sign-up")
@@ -62,18 +58,18 @@ public class AuthController {
     @PostMapping("/request-pass")
     public ResponseEntity requestPassword(@Valid @RequestBody RequestPasswordDTO requestPasswordDTO) {
         requestPasswordService.requestPassword(requestPasswordDTO);
-        return ok(null);
+        return ok("Ok");
     }
 
     @PostMapping("/sign-out")
     public ResponseEntity logout() {
-        return ok(null);
+        return ok("Ok");
     }
 
     @PostMapping("/reset-pass")
     public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
         resetPasswordService.resetPassword(resetPasswordDTO);
-        return ok(null);
+        return ok("Password was reset");
     }
 
     @PostMapping("/refresh-token")

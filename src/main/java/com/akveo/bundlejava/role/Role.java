@@ -6,11 +6,15 @@
 
 package com.akveo.bundlejava.role;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "role")
-public class Role {
+public class Role implements GrantedAuthority {
+
+    private static final long serialVersionUID = 1674924613078177003L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +26,11 @@ public class Role {
 
     @Column(name = "is_default")
     private Boolean isDefault = false;
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 
     public Long getId() {
         return id;
