@@ -8,15 +8,23 @@ package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.address.AddressDTO;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class UserDTO {
 
+    @NotEmpty
+    @NotNull
+    private String userName;
+
+    @NotEmpty
+    @NotNull
+    private String email;
+
     private Long id;
     private String firstName;
     private String lastName;
-    private String userName;
-    private String email;
     private Integer age;
     private AddressDTO address;
     private Set<String> roles;

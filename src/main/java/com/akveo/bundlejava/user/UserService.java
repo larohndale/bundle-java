@@ -45,13 +45,8 @@ public class UserService {
     }
 
     public User findByEmail(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with email: " + email + " not found");
-        }
-
-        return user;
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email: " + email + " not found"));
     }
 
     @Transactional
@@ -60,9 +55,10 @@ public class UserService {
             throw new PasswordsDontMatchException();
         }
 
-        if (emailExists(signUpDTO.getEmail())) {
-            throw new UserAlreadyExistsException(signUpDTO.getEmail());
-        }
+        String email = signUpDTO.getEmail();
+
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserAlreadyExistsException(email));
 
         User user = signUpUser(signUpDTO);
 
@@ -150,11 +146,6 @@ public class UserService {
         userRepository.save(updatedUser);
 
         return modelMapper.map(updatedUser, UserDTO.class);
-    }
-
-    private boolean emailExists(String email) {
-        User user = userRepository.findByEmail(email);
-        return user != null;
     }
 
     private User signUpUser(SignUpDTO signUpDTO) {
