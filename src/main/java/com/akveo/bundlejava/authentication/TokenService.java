@@ -7,7 +7,11 @@
 package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.user.User;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,9 +78,10 @@ public class TokenService {
     }
 
     String resolveToken(HttpServletRequest req) {
+        String bearer = "Bearer ";
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        if (bearerToken != null && bearerToken.startsWith(bearer)) {
+            return bearerToken.substring(bearer.length());
         }
         return null;
     }

@@ -51,7 +51,8 @@ public class AuthService {
         try {
             Authentication authentication = createAuthentication(loginDTO);
             BundleUserDetailsService.BundleUserDetails userDetails =
-                    (BundleUserDetailsService.BundleUserDetails) authenticationManager.authenticate(authentication).getPrincipal();
+                    (BundleUserDetailsService.BundleUserDetails) authenticationManager
+                            .authenticate(authentication).getPrincipal();
             User user = userDetails.getUser();
             return createToken(user);
         } catch (AuthenticationException exception) {

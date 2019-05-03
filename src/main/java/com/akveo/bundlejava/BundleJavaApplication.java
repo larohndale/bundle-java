@@ -12,10 +12,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
+@SuppressWarnings({"checkstyle:FinalClass", "checkstyle:HideUtilityClassConstructor"})
 public class BundleJavaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BundleJavaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BundleJavaApplication.class, args);
+    }
 
 }

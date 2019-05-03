@@ -6,11 +6,18 @@
 
 package com.akveo.bundlejava.authentication;
 
-import com.akveo.bundlejava.authentication.resetpassword.*;
+import com.akveo.bundlejava.authentication.resetpassword.RequestPasswordService;
+import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordService;
+import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordService;
+import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordDTO;
+import com.akveo.bundlejava.authentication.resetpassword.RequestPasswordDTO;
+import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.Collections;

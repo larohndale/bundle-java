@@ -22,8 +22,8 @@ public class Token {
     }
 
     @JsonSetter("expires_in")
-    public void setExpiresIn(Long expires_in) {
-        this.expiresIn = expires_in;
+    public void setExpiresIn(Long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 
     @JsonGetter("access_token")
@@ -32,8 +32,8 @@ public class Token {
     }
 
     @JsonSetter("access_token")
-    public void setAccessToken(String access_token) {
-        this.accessToken = access_token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     @JsonGetter("refresh_token")
@@ -42,7 +42,7 @@ public class Token {
     }
 
     @JsonSetter("refresh_token")
-    public void setRefreshToken(String refresh_token) {
-        this.refreshToken = refresh_token;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

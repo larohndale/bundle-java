@@ -113,7 +113,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO createUser(UserDTO userDTO){
+    public UserDTO createUser(UserDTO userDTO) {
         if (userDTO.getId() == null) {
             throw new UserInvalidHttpException("Invalid user id");
         }

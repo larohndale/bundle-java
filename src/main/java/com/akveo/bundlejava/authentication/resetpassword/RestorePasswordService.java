@@ -46,7 +46,7 @@ public class RestorePasswordService {
         restorePasswordTokenRepository.delete(restorePassword);
     }
 
-    public void removeExpiredRestorePasswordTokens(){
+    public void removeExpiredRestorePasswordTokens() {
         List<RestorePassword> restorePasswordList = restorePasswordTokenRepository.findAll();
 
         if (!restorePasswordList.isEmpty()) {

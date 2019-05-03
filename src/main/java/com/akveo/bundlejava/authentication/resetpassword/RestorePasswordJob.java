@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestorePasswordJob {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestorePasswordJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestorePasswordJob.class);
 
     private RestorePasswordService restorePasswordService;
 
@@ -27,7 +27,7 @@ public class RestorePasswordJob {
 
     @Scheduled(cron = "${client.resetPasswordToken.clearJob}")
     public void reportCurrentTime() {
-        logger.info("Clear expired restore tokens");
+        LOGGER.info("Clear expired restore tokens");
         restorePasswordService.removeExpiredRestorePasswordTokens();
     }
 
