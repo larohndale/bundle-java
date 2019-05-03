@@ -4,8 +4,10 @@
  * See LICENSE_PERSONAL / LICENSE_COMMERCIAL in the project root for license information on type of purchased license.
  */
 
-package com.akveo.bundlejava.authentication;
+package com.akveo.bundlejava.config;
 
+import com.akveo.bundlejava.authentication.JwtConfigurer;
+import com.akveo.bundlejava.authentication.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
