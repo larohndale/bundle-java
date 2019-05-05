@@ -11,7 +11,6 @@ import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
 import com.akveo.bundlejava.role.RoleService;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
-import com.akveo.bundlejava.user.exception.UserInvalidHttpException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,10 +113,6 @@ public class UserService {
 
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
-        if (userDTO.getId() == null) {
-            throw new UserInvalidHttpException("Invalid user id");
-        }
-
         User user = modelMapper.map(userDTO, User.class);
 
         // In current version password and role are default
