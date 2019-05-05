@@ -1,8 +1,8 @@
 INSERT INTO user (id, first_name, last_name, user_name, email, password_hash) VALUES
 -- Hashed "password"
-  (1, 'Mark', 'Walmart', '@mdo', 'mdo@gmail.com', '$2a$10$ZUw7TUg/cKEJw4XlSS/6Wu0Pp05yi5kUO3cBYs5ewInpKXOW/US6G'),
+  (1, 'Admin', 'Admin', 'admin', 'admin@admin.com', '$2a$10$ZUw7TUg/cKEJw4XlSS/6Wu0Pp05yi5kUO3cBYs5ewInpKXOW/US6G'),
 -- Hashed "password1"
-  (2, 'Larry', 'Page', '@twitter', 'twitter@gmail.com', '$2a$10$6IDH7YBMlz3B2W9GiHdEI.sm6tlVRDYGmA9eWzUDucYYnqQVvmR66');
+  (2, 'User', 'User', 'user', 'user@user.com', '$2a$10$6IDH7YBMlz3B2W9GiHdEI.sm6tlVRDYGmA9eWzUDucYYnqQVvmR66');
 
 INSERT INTO role (id, name, is_default) VALUES
   (1, 'USER', 1), (2, 'ADMIN', 0);
