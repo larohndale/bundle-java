@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.akveo</groupId>
 	<artifactId>bundle-java</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>bundle-java</name>
 	<description>Backend bundle in Java implementation for ngx admin</description>
 
