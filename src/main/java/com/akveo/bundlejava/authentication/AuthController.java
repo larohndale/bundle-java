@@ -101,7 +101,8 @@ public class AuthController {
     }
 
     /**
-     * Sign out. Perform any required actions to log out user, like invalidate user session. implement your required logic
+     * Sign out. Perform any required actions to log out user, like invalidate user session.
+     * Implement your required logic
      * @return result message
      */
     @PostMapping("/sign-out")

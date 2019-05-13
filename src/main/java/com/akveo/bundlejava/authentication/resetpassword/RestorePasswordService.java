@@ -6,7 +6,6 @@
 
 package com.akveo.bundlejava.authentication.resetpassword;
 
-import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.resetpassword.exception.TokenNotFoundOrExpiredHttpException;
 import com.akveo.bundlejava.user.ChangePasswordRequest;
 import com.akveo.bundlejava.user.UserService;
