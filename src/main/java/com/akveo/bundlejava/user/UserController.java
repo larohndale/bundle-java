@@ -22,6 +22,9 @@ import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * Controller for managing users
+ */
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -33,12 +36,23 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Get user. Allowed only for Admin
+     * @param id user id
+     * @return user
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity getUser(@PathVariable Long id) {
         return ok(userService.getUserById(id));
     }
 
+    /**
+     * Update user. Allowed only for Admin
+     * @param id user id
+     * @param userDTO updated user data
+     * @return updated user data
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
@@ -46,25 +60,44 @@ public class UserController {
         return ok(updatedUser);
     }
 
+    /**
+     * Delete user
+     * @param id user id
+     * @return boolean result
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) {
         return ok(userService.deleteUser(id));
     }
 
+    /**
+     * Get current user
+     * @return current user data
+     */
     @GetMapping("/current")
     public ResponseEntity getCurrentUser() {
         return ok(userService.getCurrentUser());
     }
 
+    /**
+     * Update current user
+     * @param userDTO updated user data
+     * @return updated user data
+     */
     @PutMapping("/current")
     public ResponseEntity updateCurrentUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateCurrentUser(userDTO);
         return ok(updatedUser);
     }
 
+    /**
+     * Create user. Allowed only for Admin
+     * @param userDTO new user data
+     * @return created user
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity createUsers(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity createUser(@Valid @RequestBody UserDTO userDTO) {
         return ok(userService.createUser(userDTO));
     }
 

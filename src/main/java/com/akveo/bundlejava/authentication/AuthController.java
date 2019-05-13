@@ -25,6 +25,9 @@ import java.util.Collections;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * Controller which provides functionality for authentication
+ */
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -45,12 +48,22 @@ public class AuthController {
         this.resetPasswordService = resetPasswordService;
     }
 
+    /**
+     * Login user
+     * @param loginDTO user credentials
+     * @return generated token
+     */
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) {
         Token token = authService.login(loginDTO);
         return toResponse(token);
     }
 
+    /**
+     * Restore password
+     * @param restorePasswordDTO new password with token
+     * @return result message
+     */
     @PostMapping("/restore-pass")
     public ResponseEntity restorePassword(@Valid @RequestBody RestorePasswordDTO restorePasswordDTO) {
         if (!restorePasswordDTO.getNewPassword().equals(restorePasswordDTO.getConfirmPassword())) {
@@ -61,6 +74,11 @@ public class AuthController {
         return ok("Password was restored");
     }
 
+    /**
+     * Sign up
+     * @param signUpDTO sign up user data
+     * @return token
+     */
     @PostMapping("/sign-up")
     public ResponseEntity register(@Valid @RequestBody SignUpDTO signUpDTO) {
         if (!signUpDTO.getPassword().equals(signUpDTO.getConfirmPassword())) {
@@ -71,17 +89,31 @@ public class AuthController {
         return toResponse(token);
     }
 
+    /**
+     * Request password. Generate link for restoring password which should be sent via email
+     * @param requestPasswordDTO object with user email
+     * @return result message
+     */
     @PostMapping("/request-pass")
     public ResponseEntity requestPassword(@Valid @RequestBody RequestPasswordDTO requestPasswordDTO) {
         requestPasswordService.requestPassword(requestPasswordDTO);
         return ok("Ok");
     }
 
+    /**
+     * Sign out. Perform any required actions to log out user, like invalidate user session. implement your required logic
+     * @return result message
+     */
     @PostMapping("/sign-out")
     public ResponseEntity logout() {
         return ok("Ok");
     }
 
+    /**
+     * Reset password for signed in user
+     * @param resetPasswordDTO new and confirmed passwords
+     * @return result message
+     */
     @PostMapping("/reset-pass")
     public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
         if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getPassword())) {
@@ -92,6 +124,11 @@ public class AuthController {
         return ok("Password was reset");
     }
 
+    /**
+     * Refresh token
+     * @param refreshTokenDTO refresh token
+     * @return new token
+     */
     @PostMapping("/refresh-token")
     public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
         Token token = authService.refreshToken(refreshTokenDTO);
