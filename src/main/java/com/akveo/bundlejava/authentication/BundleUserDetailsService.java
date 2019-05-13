@@ -55,6 +55,9 @@ public class BundleUserDetailsService implements UserDetailsService {
     }
 
     public static class BundleUserDetails implements UserDetails {
+
+        private static final long serialVersionUID = -3542337090559589236L;
+
         private User user;
         private List<GrantedAuthority> authorities;
 

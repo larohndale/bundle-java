@@ -7,6 +7,8 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.role.Role;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.Column;
@@ -25,7 +27,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -4214325494311301431L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
