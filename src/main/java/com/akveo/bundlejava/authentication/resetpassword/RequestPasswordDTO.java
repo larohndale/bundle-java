@@ -14,6 +14,13 @@ public class RequestPasswordDTO {
     @NotEmpty
     private String email;
 
+    public RequestPasswordDTO() {
+    }
+
+    public RequestPasswordDTO(String email) {
+        this.email = email;
+    }
+
     public String getEmail() {
         return email;
     }

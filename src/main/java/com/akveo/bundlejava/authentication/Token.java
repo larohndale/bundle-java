@@ -16,6 +16,15 @@ public class Token {
 
     private String refreshToken;
 
+    public Token() {
+    }
+
+    public Token(Long expiresIn, String accessToken, String refreshToken) {
+        this.expiresIn = expiresIn;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+
     @JsonGetter("expires_in")
     public Long getExpiresIn() {
         return expiresIn;

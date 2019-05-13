@@ -56,8 +56,9 @@ public class UserService {
 
         String email = signUpDTO.getEmail();
 
-        userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserAlreadyExistsException(email));
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserAlreadyExistsException(email);
+        }
 
         User user = signUpUser(signUpDTO);
 

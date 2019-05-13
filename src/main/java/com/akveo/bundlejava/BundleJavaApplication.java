@@ -6,6 +6,8 @@
 
 package com.akveo.bundlejava;
 
+import java.util.Locale;
+import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,6 +18,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class BundleJavaApplication {
 
     public static void main(String[] args) {
+        Locale.setDefault(Locale.US);
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UCT"));
+
         SpringApplication.run(BundleJavaApplication.class, args);
     }
 

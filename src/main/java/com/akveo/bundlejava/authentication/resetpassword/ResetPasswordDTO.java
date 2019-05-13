@@ -18,6 +18,14 @@ public class ResetPasswordDTO {
     @NotEmpty
     private String confirmPassword;
 
+    public ResetPasswordDTO() {
+    }
+
+    public ResetPasswordDTO(String password) {
+        this.password = password;
+        this.confirmPassword = password;
+    }
+
     public String getPassword() {
         return password;
     }

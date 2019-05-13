@@ -29,6 +29,17 @@ public class SignUpDTO {
     @NotEmpty
     private String confirmPassword;
 
+    public SignUpDTO() {
+    }
+
+    public SignUpDTO(String fullName, String email,
+                     String password, String confirmPassword) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
+
     public String getFullName() {
         return fullName;
     }

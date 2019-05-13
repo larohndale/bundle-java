@@ -11,9 +11,15 @@ import javax.validation.constraints.NotNull;
 
 public class RefreshTokenDTO {
 
-    @NotEmpty
     @NotNull
     private Token token;
+
+    public RefreshTokenDTO() {
+    }
+
+    public RefreshTokenDTO(@NotEmpty @NotNull Token token) {
+        this.token = token;
+    }
 
     public Token getToken() {
         return token;

@@ -45,7 +45,6 @@ public class User {
     private String userName;
 
     @Column(name = "email", nullable = false)
-    @Email(message = "Please, provide a valid Email")
     @NotEmpty(message = "Please, provide an email")
     private String email;
 
