@@ -26,7 +26,7 @@ For demo purpose, we use an in-memory database - H2. You don't need to do any pr
 
 1) open `<api_url>/h2-console`
 2) fill field `JDBC URL` with `spring.datasource.url` from application/properties. By default in our properties, it's `jdbc:h2:mem:testdb`
-3) fill credentials `spring.datasource.username` and `spring.datasource.password`. By default in our properties, it's `sa' and 'password`
+3) fill credentials `spring.datasource.username` and `spring.datasource.password`. By default in our properties, it's `sa` and `password`
 4) click `connect` and you can use web interface for H2 database
 
 Every time you rerun the application, the database will be recreated and filled with data from `data.sql`. For production purposes, please remove this file and use real Database
