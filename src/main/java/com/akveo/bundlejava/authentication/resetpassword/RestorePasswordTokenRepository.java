@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Repository
 public interface RestorePasswordTokenRepository extends JpaRepository<RestorePassword, Long> {
@@ -21,6 +21,6 @@ public interface RestorePasswordTokenRepository extends JpaRepository<RestorePas
 
     @Transactional
     @Modifying
-    @Query("delete from RestorePassword rp where rp.id in ?1")
-    void deleteRestorePasswordWithIds(List<Long> ids);
+    @Query("delete from RestorePassword rp where rp.expiresIn < :localDateTime")
+    void deleteExpiredRestorePasswordTokens(LocalDateTime localDateTime);
 }
