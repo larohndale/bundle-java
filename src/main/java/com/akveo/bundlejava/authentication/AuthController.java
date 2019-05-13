@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.authentication;
 
+import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.resetpassword.RequestPasswordService;
 import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordService;
 import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordService;
@@ -52,12 +53,20 @@ public class AuthController {
 
     @PostMapping("/restore-pass")
     public ResponseEntity restorePassword(@Valid @RequestBody RestorePasswordDTO restorePasswordDTO) {
+        if (!restorePasswordDTO.getNewPassword().equals(restorePasswordDTO.getConfirmPassword())) {
+            throw new PasswordsDontMatchException();
+        }
+
         restorePasswordService.restorePassword(restorePasswordDTO);
         return ok("Password was restored");
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity register(@Valid @RequestBody SignUpDTO signUpDTO) {
+        if (!signUpDTO.getPassword().equals(signUpDTO.getConfirmPassword())) {
+            throw new PasswordsDontMatchException();
+        }
+
         Token token = authService.register(signUpDTO);
         return toResponse(token);
     }
@@ -75,6 +84,10 @@ public class AuthController {
 
     @PostMapping("/reset-pass")
     public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        if (!resetPasswordDTO.getConfirmPassword().equals(resetPasswordDTO.getPassword())) {
+            throw new PasswordsDontMatchException();
+        }
+
         resetPasswordService.resetPassword(resetPasswordDTO);
         return ok("Password was reset");
     }

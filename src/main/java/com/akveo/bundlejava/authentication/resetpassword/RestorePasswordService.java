@@ -31,10 +31,6 @@ public class RestorePasswordService {
     }
 
     public void restorePassword(RestorePasswordDTO restorePasswordDTO) {
-        if (!restorePasswordDTO.getNewPassword().equals(restorePasswordDTO.getConfirmPassword())) {
-            throw new PasswordsDontMatchException();
-        }
-
         RestorePassword restorePassword =
                 restorePasswordTokenRepository.findByToken(restorePasswordDTO.getToken());
 
@@ -52,6 +48,7 @@ public class RestorePasswordService {
         if (!restorePasswordList.isEmpty()) {
             restorePasswordTokenRepository.deleteRestorePasswordWithIds(
                     restorePasswordList.stream()
+                            .filter(RestorePassword::isExpired)
                             .map(RestorePassword::getId)
                             .collect(Collectors.toList()));
         }
@@ -65,4 +62,5 @@ public class RestorePasswordService {
 
         userService.changePassword(changePasswordRequest);
     }
+
 }
