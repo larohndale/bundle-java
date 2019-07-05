@@ -10,6 +10,8 @@ import com.akveo.bundlejava.authentication.SignUpDTO;
 import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
 import com.akveo.bundlejava.role.RoleService;
+import com.akveo.bundlejava.settings.Settings;
+import com.akveo.bundlejava.settings.SettingsService;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -32,14 +33,18 @@ public class UserService {
     private ModelMapper modelMapper;
     private RoleService roleService;
 
+    private SettingsService settingsService;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        ModelMapper modelMapper,
+                       SettingsService settingsService,
                        RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
+        this.settingsService = settingsService;
         this.roleService = roleService;
     }
 
@@ -76,13 +81,11 @@ public class UserService {
     }
 
     public UserDTO getUserById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
+        User existingUser = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND)
+        );
 
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
-        }
-
-        return modelMapper.map(userOptional.get(), UserDTO.class);
+        return modelMapper.map(existingUser, UserDTO.class);
     }
 
     @Transactional
@@ -102,6 +105,8 @@ public class UserService {
 
     public UserDTO getCurrentUser() {
         User user = UserContextHolder.getUser();
+        user.setSettings(settingsService.getSettingsByUserId(user.getId()));
+
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -119,19 +124,15 @@ public class UserService {
         // In current version password and role are default
         user.setPasswordHash(encodePassword("testPass"));
         user.setRoles(new HashSet<>(Collections.singletonList(roleService.getDefaultRole())));
-
         userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
 
     private UserDTO updateUser(Long id, UserDTO userDTO) {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundHttpException("User with id: " + id + " not found", HttpStatus.NOT_FOUND);
-        }
-
-        User existingUser = userOptional.get();
+        User existingUser = userRepository.findById(id).
+                orElseThrow(() -> new UserNotFoundHttpException(
+                        "User with id: " + id + " not found", HttpStatus.NOT_FOUND)
+                );
 
         User updatedUser = modelMapper.map(userDTO, User.class);
         updatedUser.setId(id);
@@ -152,7 +153,7 @@ public class UserService {
         String encodedPassword = encodePassword(signUpDTO.getPassword());
         user.setPasswordHash(encodedPassword);
         user.setRoles(new HashSet<>(Collections.singletonList(roleService.getDefaultRole())));
-
+        user.setSettings(new Settings("Cosmic"));
         return user;
     }
 

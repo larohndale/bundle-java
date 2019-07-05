@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface RoleRepository extends JpaRepository<Role, Long> {
-
     @Query("SELECT r FROM Role r WHERE r.isDefault = 1")
     Role findDefault();
 }

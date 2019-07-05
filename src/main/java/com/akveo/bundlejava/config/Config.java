@@ -61,6 +61,7 @@ public class Config {
                         })
                         .collect(Collectors.toSet());
 
+
         modelMapper.typeMap(UserDTO.class, User.class)
                 .addMappings(mapper -> mapper.using(converter).map(UserDTO::getRoles, User::setRoles));
     }
