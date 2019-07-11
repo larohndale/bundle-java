@@ -45,6 +45,7 @@ public class AuthService {
     Token register(SignUpDTO signUpDTO) throws UserAlreadyExistsHttpException {
         try {
             User user = userService.register(signUpDTO);
+
             return createToken(user);
         } catch (UserAlreadyExistsException exception) {
             throw new UserAlreadyExistsHttpException();

@@ -6,20 +6,22 @@
 
 package com.akveo.bundlejava.user;
 
+
+import com.akveo.bundlejava.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
@@ -38,6 +40,7 @@ public class UserController {
 
     /**
      * Get user. Allowed only for Admin
+     *
      * @param id user id
      * @return user
      */
@@ -49,7 +52,8 @@ public class UserController {
 
     /**
      * Update user. Allowed only for Admin
-     * @param id user id
+     *
+     * @param id      user id
      * @param userDTO updated user data
      * @return updated user data
      */
@@ -62,6 +66,7 @@ public class UserController {
 
     /**
      * Delete user
+     *
      * @param id user id
      * @return boolean result
      */
@@ -72,6 +77,7 @@ public class UserController {
 
     /**
      * Get current user
+     *
      * @return current user data
      */
     @GetMapping("/current")
@@ -81,6 +87,7 @@ public class UserController {
 
     /**
      * Update current user
+     *
      * @param userDTO updated user data
      * @return updated user data
      */
@@ -92,6 +99,7 @@ public class UserController {
 
     /**
      * Create user. Allowed only for Admin
+     *
      * @param userDTO new user data
      * @return created user
      */
@@ -101,4 +109,28 @@ public class UserController {
         return ok(userService.createUser(userDTO));
     }
 
+    /**
+     * Update current user image
+     *
+     * @param baseString updated user image
+     * @return updated image
+     */
+    @PostMapping("/{id}/photo")
+    public ResponseEntity updateUserImage(@PathVariable Long id, @Valid @RequestBody String baseString) {
+        Image image = userService.updateUserImageById(id, baseString);
+        return ok(image);
+    }
+
+    /**
+     * Get user image by id
+     *
+     * @param id user image id
+     * @return user image
+     */
+    @GetMapping("/{id}/photo")
+    public ResponseEntity getUserImage(@PathVariable Long id, @RequestParam String token) {
+        Image image = userService.getImageById(id, token);
+        return ok(image);
+    }
 }
+

@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.user;
 
+import com.akveo.bundlejava.image.Image;
 import com.akveo.bundlejava.role.Role;
 
 import java.io.Serializable;
@@ -46,9 +47,9 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "user_name", nullable = false)
-    @NotEmpty(message = "Please, provide an user name")
-    private String userName;
+    @Column(name = "login", nullable = false)
+    @NotEmpty(message = "Please, provide a login")
+    private String login;
 
     @Column(name = "email", nullable = false)
     @NotEmpty(message = "Please, provide an email")
@@ -107,6 +108,17 @@ public class User implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Image image;
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public Long getId() {
         return id;
     }
@@ -131,12 +143,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getEmail() {

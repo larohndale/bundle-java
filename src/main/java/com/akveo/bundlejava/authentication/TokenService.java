@@ -7,13 +7,11 @@
 package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.user.User;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,24 +27,26 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class TokenService {
-    @Value("${jwt.accessTokenSecretKey}")
     private String accessTokenSecretKey;
 
-    @Value("${jwt.refreshTokenSecretKey}")
     private String refreshTokenSecretKey;
 
-    @Value("${jwt.accessTokenValidityInMilliseconds}")
     private long accessTokenValidityInMilliseconds;
 
-    @Value("${jwt.refreshTokenValidityInMilliseconds}")
     private long refreshTokenValidityInMilliseconds;
 
     private UserDetailsService userDetailsService;
 
     @Autowired
     public TokenService(UserDetailsService userDetailsService) {
+        Properties prop = new Properties();
         this.userDetailsService = userDetailsService;
+        accessTokenSecretKey = prop.getAccessTokenSecretKey();
+        accessTokenValidityInMilliseconds = prop.getAccessTokenValidityInMilliseconds();
+        refreshTokenSecretKey = prop.getRefreshTokenSecretKey();
+        refreshTokenValidityInMilliseconds = prop.getRefreshTokenValidityInMilliseconds();
     }
+
 
     @PostConstruct
     protected void init() {
@@ -86,17 +86,6 @@ public class TokenService {
         return null;
     }
 
-    boolean isValid(String token) throws Exception {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(accessTokenSecretKey)
-                    .parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new Exception("Expired or invalid JWT token");
-        }
-    }
-
     private String createAccessToken(User user) {
         long expiresIn = expiration(accessTokenValidityInMilliseconds);
 
@@ -108,6 +97,17 @@ public class TokenService {
 
         return createToken(user, expiresIn, refreshTokenSecretKey);
     }
+
+//    public boolean isValid(String token) throws Exception {
+//        try {
+//            Jws<Claims> claims = Jwts.parser()
+//                    .setSigningKey(accessTokenSecretKey)
+//                    .parseClaimsJws(token);
+//            return !claims.getBody().getExpiration().before(new Date());
+//        } catch (JwtException | IllegalArgumentException e) {
+//            throw new Exception("Expired or invalid JWT token");
+//        }
+//    }
 
     private String createToken(User user, long expiresIn, String key) {
         Claims claims = Jwts.claims();
