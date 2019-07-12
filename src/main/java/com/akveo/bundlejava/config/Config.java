@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.config;
 
+import com.akveo.bundlejava.authentication.TokenValidationService;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
 import com.akveo.bundlejava.user.UserDTO;
@@ -35,6 +36,11 @@ public class Config {
         configModelMapper(modelMapper);
         return modelMapper;
     }
+
+//    @Bean
+//    public TokenValidationService tokenValidationService() {
+//        return new TokenValidationService();
+//    }
 
     private void configModelMapper(ModelMapper modelMapper) {
         configUserToUserDTOMapper(modelMapper);
