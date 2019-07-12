@@ -10,6 +10,9 @@ import com.akveo.bundlejava.authentication.RefreshTokenDTO;
 import java.util.Locale;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.akveo.bundlejava.image.Image;
+import com.akveo.bundlejava.settings.Settings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +35,8 @@ public class UserControllerTest {
 
     public static final String ADMIN_EMAIL = "admin@admin.com";
     public static final String ADMIN_PASSWORD = "password";
+    public static final String BASE_STRING = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA";
+    public static final Long USER_ID = Long.valueOf(1);
     public static final String EXISTING_ID = "1";
     public static final String EXISTING_ID_2 = "2";
     public static final int NEW_AGE = 999;
@@ -137,7 +142,7 @@ public class UserControllerTest {
         headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
 
         UserDTO newUser = new UserDTO(USERNAME, NEW_EMAIL);
-
+        newUser.setId(USER_ID);
         ResponseEntity<UserDTO> response = restTemplate.exchange("/users", HttpMethod.POST,
             new HttpEntity<>(newUser, headers), UserDTO.class);
 
@@ -155,4 +160,5 @@ public class UserControllerTest {
             "/auth/login", entity, RefreshTokenDTO.class);
         return response.getBody();
     }
+
 }
