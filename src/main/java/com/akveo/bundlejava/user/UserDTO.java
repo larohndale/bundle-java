@@ -8,18 +8,16 @@ package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.address.AddressDTO;
 import com.akveo.bundlejava.settings.Settings;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class UserDTO {
 
-    @NotNull
-    private Long id;
-
     @NotEmpty
     @NotNull
-    private String login;
+    private String userName;
 
     @NotEmpty
     @NotNull
@@ -30,30 +28,15 @@ public class UserDTO {
     private Integer age;
     private AddressDTO address;
     private Set<String> roles;
+
     private Settings settings;
-    private String baseString;
 
-    public UserDTO() { }
+    public UserDTO() {
+    }
 
-    public UserDTO(String login, String email) {
-        this.login = login;
+    public UserDTO(String userName, String email) {
+        this.userName = userName;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBaseString() {
-        return baseString;
-    }
-
-    public void setBaseString(String baseString) {
-        this.baseString = baseString;
     }
 
     public Settings getSettings() {
@@ -80,12 +63,12 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -127,7 +110,7 @@ public class UserDTO {
 
         UserDTO userDTO = (UserDTO) o;
 
-        if (login != null ? !login.equals(userDTO.login) : userDTO.login != null) return false;
+        if (userName != null ? !userName.equals(userDTO.userName) : userDTO.userName != null) return false;
         if (email != null ? !email.equals(userDTO.email) : userDTO.email != null) return false;
         if (firstName != null ? !firstName.equals(userDTO.firstName) : userDTO.firstName != null) return false;
         if (lastName != null ? !lastName.equals(userDTO.lastName) : userDTO.lastName != null) return false;
@@ -138,7 +121,7 @@ public class UserDTO {
 
     @Override
     public int hashCode() {
-        int result = login != null ? login.hashCode() : 0;
+        int result = userName != null ? userName.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
@@ -151,7 +134,7 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-            "login='" + login + '\'' +
+            "userName='" + userName + '\'' +
             ", email='" + email + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +

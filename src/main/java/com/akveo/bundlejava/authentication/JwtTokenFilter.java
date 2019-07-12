@@ -19,13 +19,9 @@ import java.io.IOException;
 
 public class JwtTokenFilter extends GenericFilterBean {
     private TokenService tokenService;
-    private TokenValidationService tokenValidationService;
 
-    JwtTokenFilter(TokenService tokenService,
-                   TokenValidationService tokenValidationService
-    ) {
+    JwtTokenFilter(TokenService tokenService) {
         this.tokenService = tokenService;
-        this.tokenValidationService = tokenValidationService;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         String token = tokenService.resolveToken((HttpServletRequest) req);
 
         try {
-            if (token == null || !tokenValidationService.isValid(token)) {
+            if (token == null || !tokenService.isValid(token)) {
                 filterChain.doFilter(req, res);
                 return;
             }

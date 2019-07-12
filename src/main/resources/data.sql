@@ -1,7 +1,7 @@
 INSERT INTO settings (id, theme_name) VALUES
-  (1, 'default'), (2, 'cosmic');
+  (1, 'default'), (2, 'cosmic'), (3, 'corporate');
 
-INSERT INTO user (id, first_name, last_name, login, email, password_hash, is_deleted, settings_id) VALUES
+INSERT INTO user (id, first_name, last_name, user_name, email, password_hash, is_deleted, settings_id) VALUES
 -- Hashed "password"
   (1, 'Admin', 'Admin', 'admin', 'admin@admin.com', '$2a$10$ZUw7TUg/cKEJw4XlSS/6Wu0Pp05yi5kUO3cBYs5ewInpKXOW/US6G', false, 1),
 -- Hashed "password1"
