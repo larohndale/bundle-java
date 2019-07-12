@@ -7,9 +7,9 @@
 package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.user.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,12 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.Date;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class TokenService {
@@ -38,19 +34,13 @@ public class TokenService {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    public TokenService(UserDetailsService userDetailsService) {
-        Properties prop = new Properties();
+    public TokenService(UserDetailsService userDetailsService,
+                        Properties properties) {
         this.userDetailsService = userDetailsService;
-        accessTokenSecretKey = prop.getAccessTokenSecretKey();
-        accessTokenValidityInMilliseconds = prop.getAccessTokenValidityInMilliseconds();
-        refreshTokenSecretKey = prop.getRefreshTokenSecretKey();
-        refreshTokenValidityInMilliseconds = prop.getRefreshTokenValidityInMilliseconds();
-    }
-
-
-    @PostConstruct
-    protected void init() {
-        accessTokenSecretKey = Base64.getEncoder().encodeToString(accessTokenSecretKey.getBytes(UTF_8));
+        accessTokenSecretKey = properties.getAccessTokenSecretKey();
+        accessTokenValidityInMilliseconds = properties.getAccessTokenValidityInMilliseconds();
+        refreshTokenSecretKey = properties.getRefreshTokenSecretKey();
+        refreshTokenValidityInMilliseconds = properties.getRefreshTokenValidityInMilliseconds();
     }
 
     Token createToken(User user) {
@@ -97,17 +87,6 @@ public class TokenService {
 
         return createToken(user, expiresIn, refreshTokenSecretKey);
     }
-
-//    public boolean isValid(String token) throws Exception {
-//        try {
-//            Jws<Claims> claims = Jwts.parser()
-//                    .setSigningKey(accessTokenSecretKey)
-//                    .parseClaimsJws(token);
-//            return !claims.getBody().getExpiration().before(new Date());
-//        } catch (JwtException | IllegalArgumentException e) {
-//            throw new Exception("Expired or invalid JWT token");
-//        }
-//    }
 
     private String createToken(User user, long expiresIn, String key) {
         Claims claims = Jwts.claims();

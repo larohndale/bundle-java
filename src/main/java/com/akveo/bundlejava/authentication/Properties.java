@@ -1,38 +1,48 @@
 package com.akveo.bundlejava.authentication;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
+import java.util.Base64;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
 public class Properties {
 
-    @Value("cyy4KhQAOWuj94LtM6Yvt$FGOQb8KBN6lIXmFFG7!Yv6K#ewWCnH#Q5IS2MhxKp&")
-    private static String accessTokenSecretKey;
+    @Value("${jwt.accessTokenSecretKey}")
+    private String accessTokenSecretKey;
 
     @Value("${jwt.refreshTokenSecretKey}")
-    private static String refreshTokenSecretKey;
+    private String refreshTokenSecretKey;
 
     @Value("${jwt.accessTokenValidityInMilliseconds}")
-    private static long accessTokenValidityInMilliseconds;
+    private long accessTokenValidityInMilliseconds;
 
     @Value("${jwt.refreshTokenValidityInMilliseconds}")
-    private static long refreshTokenValidityInMilliseconds;
+    private long refreshTokenValidityInMilliseconds;
 
+    @PostConstruct
+    protected void init() {
+        accessTokenSecretKey = Base64
+                .getEncoder()
+                .encodeToString(accessTokenSecretKey
+                        .getBytes(UTF_8));
+    }
 
-    public static String getAccessTokenSecretKey() {
+    public String getAccessTokenSecretKey() {
         return accessTokenSecretKey;
     }
 
-    public static String getRefreshTokenSecretKey() {
+    public String getRefreshTokenSecretKey() {
         return refreshTokenSecretKey;
     }
 
-    public static long getAccessTokenValidityInMilliseconds() {
+    public long getAccessTokenValidityInMilliseconds() {
         return accessTokenValidityInMilliseconds;
     }
 
-    public static long getRefreshTokenValidityInMilliseconds() {
+    public long getRefreshTokenValidityInMilliseconds() {
         return refreshTokenValidityInMilliseconds;
     }
 }
