@@ -119,3 +119,7 @@ For more information please check https://gleclaire.github.io/findbugs-maven-plu
 
 Usually, application consists of similar object models such as Entity and DTO. Every time to convert one into another it's necessary to write many converters. Model mapping makes it easy to convert one model to another. You just need to pass entity and class in which it should be converted. Sometimes models have inners entities and for mapping that entities you can add some additional configuration. Few examples you can find in `Config.java`.
 For more information please check http://modelmapper.org/
+
+## Support
+
+Please post issues in [Bundle Support Issue Tracker](https://github.com/akveo/ngx-admin-bundle-support/issues)
