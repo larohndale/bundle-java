@@ -153,7 +153,7 @@ public class UserService {
         String encodedPassword = encodePassword(signUpDTO.getPassword());
         user.setPasswordHash(encodedPassword);
         user.setRoles(new HashSet<>(Collections.singletonList(roleService.getDefaultRole())));
-        user.setSettings(new Settings("Cosmic"));
+        user.setSettings(new Settings("cosmic"));
         return user;
     }
 
