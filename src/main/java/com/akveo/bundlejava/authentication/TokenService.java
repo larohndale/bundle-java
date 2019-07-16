@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.authentication;
 
+import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
@@ -22,8 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Date;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -109,12 +109,21 @@ public class TokenService {
         return createToken(user, expiresIn, refreshTokenSecretKey);
     }
 
+    private List<String> getRoleNames(Set<Role> roles) {
+        List<String> roleNames = new ArrayList<>();
+        for (Role role : roles) {
+            roleNames.add(role.getName().toLowerCase());
+        }
+        return roleNames;
+    }
+
     private String createToken(User user, long expiresIn, String key) {
         Claims claims = Jwts.claims();
 
         claims.setSubject(user.getEmail());
         claims.put("fullName", String.join(" ", user.getFirstName(), user.getLastName()));
         claims.put("createdAt", user.getCreatedAt());
+        claims.put("role", getRoleNames(user.getRoles()));
 
         Date now = new Date();
         Date expirationDate = new Date(expiresIn);
