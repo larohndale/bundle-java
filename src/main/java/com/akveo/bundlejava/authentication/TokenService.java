@@ -8,49 +8,45 @@ package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class TokenService {
-    @Value("${jwt.accessTokenSecretKey}")
     private String accessTokenSecretKey;
 
-    @Value("${jwt.refreshTokenSecretKey}")
     private String refreshTokenSecretKey;
 
-    @Value("${jwt.accessTokenValidityInMilliseconds}")
     private long accessTokenValidityInMilliseconds;
 
-    @Value("${jwt.refreshTokenValidityInMilliseconds}")
     private long refreshTokenValidityInMilliseconds;
 
     private UserDetailsService userDetailsService;
 
     @Autowired
-    public TokenService(UserDetailsService userDetailsService) {
+    public TokenService(UserDetailsService userDetailsService,
+                        Properties properties) {
         this.userDetailsService = userDetailsService;
-    }
-
-    @PostConstruct
-    protected void init() {
-        accessTokenSecretKey = Base64.getEncoder().encodeToString(accessTokenSecretKey.getBytes(UTF_8));
+        accessTokenSecretKey = properties.getAccessTokenSecretKey();
+        accessTokenValidityInMilliseconds = properties.getAccessTokenValidityInMilliseconds();
+        refreshTokenSecretKey = properties.getRefreshTokenSecretKey();
+        refreshTokenValidityInMilliseconds = properties.getRefreshTokenValidityInMilliseconds();
     }
 
     Token createToken(User user) {
@@ -86,17 +82,6 @@ public class TokenService {
         return null;
     }
 
-    boolean isValid(String token) throws Exception {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(accessTokenSecretKey)
-                    .parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new Exception("Expired or invalid JWT token");
-        }
-    }
-
     private String createAccessToken(User user) {
         long expiresIn = expiration(accessTokenValidityInMilliseconds);
 
@@ -110,11 +95,7 @@ public class TokenService {
     }
 
     private List<String> getRoleNames(Set<Role> roles) {
-        List<String> roleNames = new ArrayList<>();
-        for (Role role : roles) {
-            roleNames.add(role.getName().toLowerCase());
-        }
-        return roleNames;
+        return roles.stream().map(Role::getName).collect(toList());
     }
 
     private String createToken(User user, long expiresIn, String key) {
@@ -124,7 +105,6 @@ public class TokenService {
         claims.put("fullName", String.join(" ", user.getFirstName(), user.getLastName()));
         claims.put("createdAt", user.getCreatedAt());
         claims.put("role", getRoleNames(user.getRoles()));
-
         Date now = new Date();
         Date expirationDate = new Date(expiresIn);
 

@@ -6,10 +6,12 @@
 
 package com.akveo.bundlejava.user;
 
+import com.akveo.bundlejava.image.Image;
 import com.akveo.bundlejava.role.Role;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -24,6 +26,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotEmpty;
 import com.akveo.bundlejava.settings.Settings;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,9 +38,10 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -4214325494311301431L;
 
+    public User() { }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "first_name")
@@ -46,9 +50,9 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "user_name", nullable = false)
-    @NotEmpty(message = "Please, provide an user name")
-    private String userName;
+    @Column(name = "login", nullable = false)
+    @NotEmpty(message = "Please, provide a login")
+    private String login;
 
     @Column(name = "email", nullable = false)
     @NotEmpty(message = "Please, provide an email")
@@ -107,6 +111,18 @@ public class User implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Image image;
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public Long getId() {
         return id;
     }
@@ -131,12 +147,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getEmail() {
@@ -233,5 +249,60 @@ public class User implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return isDeleted == user.isDeleted &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(age, user.age) &&
+                Objects.equals(passwordHash, user.passwordHash) &&
+                Objects.equals(roles, user.roles) &&
+                Objects.equals(settings, user.settings) &&
+                Objects.equals(street, user.street) &&
+                Objects.equals(city, user.city) &&
+                Objects.equals(zipCode, user.zipCode) &&
+                Objects.equals(lat, user.lat) &&
+                Objects.equals(lng, user.lng) &&
+                Objects.equals(createdAt, user.createdAt) &&
+                Objects.equals(updatedAt, user.updatedAt) &&
+                Objects.equals(image, user.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, login, email, age, passwordHash, isDeleted,
+                roles, settings, street, city, zipCode, lat, lng, createdAt, updatedAt, image);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", roles=" + roles +
+                ", settings=" + settings +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", image=" + image +
+                '}';
     }
 }

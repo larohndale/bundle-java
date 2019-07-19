@@ -8,16 +8,19 @@ package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.address.AddressDTO;
 import com.akveo.bundlejava.settings.Settings;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.Set;
 
 public class UserDTO {
 
+    @NotNull
+    private Long id;
+
     @NotEmpty
     @NotNull
-    private String userName;
+    private String login;
 
     @NotEmpty
     @NotNull
@@ -28,15 +31,30 @@ public class UserDTO {
     private Integer age;
     private AddressDTO address;
     private Set<String> roles;
-
     private Settings settings;
+    private String imageBase64;
 
-    public UserDTO() {
+    public UserDTO() { }
+
+    public UserDTO(String login, String email) {
+        this.login = login;
+        this.email = email;
     }
 
-    public UserDTO(String userName, String email) {
-        this.userName = userName;
-        this.email = email;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     public Settings getSettings() {
@@ -63,12 +81,12 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getEmail() {
@@ -106,41 +124,38 @@ public class UserDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDTO)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         UserDTO userDTO = (UserDTO) o;
-
-        if (userName != null ? !userName.equals(userDTO.userName) : userDTO.userName != null) return false;
-        if (email != null ? !email.equals(userDTO.email) : userDTO.email != null) return false;
-        if (firstName != null ? !firstName.equals(userDTO.firstName) : userDTO.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(userDTO.lastName) : userDTO.lastName != null) return false;
-        if (age != null ? !age.equals(userDTO.age) : userDTO.age != null) return false;
-        if (address != null ? !address.equals(userDTO.address) : userDTO.address != null) return false;
-        return roles != null ? roles.equals(userDTO.roles) : userDTO.roles == null;
+        return Objects.equals(id, userDTO.id) &&
+                Objects.equals(login, userDTO.login) &&
+                Objects.equals(email, userDTO.email) &&
+                Objects.equals(firstName, userDTO.firstName) &&
+                Objects.equals(lastName, userDTO.lastName) &&
+                Objects.equals(age, userDTO.age) &&
+                Objects.equals(address, userDTO.address) &&
+                Objects.equals(roles, userDTO.roles) &&
+                Objects.equals(settings, userDTO.settings) &&
+                Objects.equals(imageBase64, userDTO.imageBase64);
     }
 
     @Override
     public int hashCode() {
-        int result = userName != null ? userName.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (age != null ? age.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        return result;
+        return Objects.hash(id, login, email, firstName, lastName, age, address, roles, settings, imageBase64);
     }
 
     @Override
     public String toString() {
         return "UserDTO{" +
-            "userName='" + userName + '\'' +
-            ", email='" + email + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", age=" + age +
-            ", address=" + address +
-            ", roles=" + roles +
-            '}';
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", address=" + address +
+                ", roles=" + roles +
+                ", settings=" + settings +
+                ", imageBase64='" + imageBase64 + '\'' +
+                '}';
     }
 }

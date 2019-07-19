@@ -6,22 +6,23 @@
 
 package com.akveo.bundlejava.user;
 
+import com.akveo.bundlejava.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.ok;
-
 /**
  * Controller for managing users
  */
@@ -99,6 +100,31 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity createUser(@Valid @RequestBody UserDTO userDTO) {
         return ok(userService.createUser(userDTO));
+    }
+
+    /**
+     * Update current user image
+     *
+     * @param baseString updated user image
+     * @return updated image
+     */
+    @PutMapping("/{id}/photo")
+    public ResponseEntity updateUserImage(@PathVariable Long id, @Valid @RequestBody String baseString) {
+        Image image = userService.updateUserImageById(id, baseString);
+        return ok(image);
+    }
+
+    /**
+     * Get user image by id
+     *
+     * @param id user image id
+     * @return user image
+     */
+    @GetMapping("/{id}/photo")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id, @RequestParam String token) {
+        Image image = userService.getImageById(id, token);
+        byte[] imageBytes = image.getImageBytes();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
     }
 
 }

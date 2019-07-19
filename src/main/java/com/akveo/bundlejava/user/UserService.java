@@ -7,21 +7,28 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.authentication.SignUpDTO;
+import com.akveo.bundlejava.authentication.TokenValidationService;
 import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
+import com.akveo.bundlejava.authentication.exception.TokenValidationException;
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
+import com.akveo.bundlejava.image.Image;
+import com.akveo.bundlejava.image.ImageRepository;
 import com.akveo.bundlejava.role.RoleService;
 import com.akveo.bundlejava.settings.Settings;
 import com.akveo.bundlejava.settings.SettingsService;
+import com.akveo.bundlejava.user.exception.AccessTokenNotFoundHttpException;
 import com.akveo.bundlejava.user.exception.UserAlreadyExistsException;
 import com.akveo.bundlejava.user.exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -32,20 +39,28 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private ModelMapper modelMapper;
     private RoleService roleService;
-
+    private ImageRepository imageRepository;
     private SettingsService settingsService;
+    private TokenValidationService tokenValidationService;
+
+    @Value("${user.defaultImage}")
+    private String defaultImage;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        ModelMapper modelMapper,
                        SettingsService settingsService,
-                       RoleService roleService) {
+                       RoleService roleService,
+                       ImageRepository imageRepository,
+                       TokenValidationService tokenValidationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.settingsService = settingsService;
         this.roleService = roleService;
+        this.imageRepository = imageRepository;
+        this.tokenValidationService = tokenValidationService;
     }
 
     public User findByEmail(String email) throws UserNotFoundException {
@@ -66,6 +81,8 @@ public class UserService {
         }
 
         User user = signUpUser(signUpDTO);
+
+        imageRepository.save(user.getImage());
 
         return userRepository.save(user);
     }
@@ -113,7 +130,6 @@ public class UserService {
     public UserDTO updateCurrentUser(UserDTO userDTO) {
         User user = UserContextHolder.getUser();
         Long id = user.getId();
-
         return updateUser(id, userDTO);
     }
 
@@ -124,8 +140,20 @@ public class UserService {
         // In current version password and role are default
         user.setPasswordHash(encodePassword("testPass"));
         user.setRoles(new HashSet<>(Collections.singletonList(roleService.getDefaultRole())));
+        user.setImage(new Image());
+        userDTO.setImageBase64(defaultImage);
+
+        imageRepository.save(user.getImage());
         userRepository.save(user);
+
         return modelMapper.map(user, UserDTO.class);
+    }
+
+    private Image convertBaseStringToImage(String baseString) {
+        Image userImage = new Image();
+        byte[] decodedString = Base64.getDecoder().decode(baseString.getBytes());
+        userImage.setImageBytes(decodedString);
+        return userImage;
     }
 
     private UserDTO updateUser(Long id, UserDTO userDTO) {
@@ -133,13 +161,12 @@ public class UserService {
                 orElseThrow(() -> new UserNotFoundHttpException(
                         "User with id: " + id + " not found", HttpStatus.NOT_FOUND)
                 );
-
         User updatedUser = modelMapper.map(userDTO, User.class);
         updatedUser.setId(id);
         updatedUser.setPasswordHash(existingUser.getPasswordHash());
         // Current version doesn't update roles
         updatedUser.setRoles(existingUser.getRoles());
-
+        updatedUser.setImage(existingUser.getImage());
         userRepository.save(updatedUser);
 
         return modelMapper.map(updatedUser, UserDTO.class);
@@ -148,12 +175,14 @@ public class UserService {
     private User signUpUser(SignUpDTO signUpDTO) {
         User user = new User();
         user.setEmail(signUpDTO.getEmail());
-        user.setUserName(signUpDTO.getFullName());
-
+        user.setLogin(signUpDTO.getFullName());
         String encodedPassword = encodePassword(signUpDTO.getPassword());
         user.setPasswordHash(encodedPassword);
         user.setRoles(new HashSet<>(Collections.singletonList(roleService.getDefaultRole())));
+        //Set default settings and image
         user.setSettings(new Settings("cosmic"));
+        user.setImage(new Image());
+
         return user;
     }
 
@@ -161,4 +190,38 @@ public class UserService {
         return passwordEncoder.encode(password);
     }
 
+    public Image getImageById(Long id, String token) {
+        try {
+            tokenValidationService.isValid(token);
+        } catch (TokenValidationException e) {
+            throw new AccessTokenNotFoundHttpException("Access token wasn't found", HttpStatus.NOT_FOUND);
+        }
+
+        Image existingImage = imageRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("image is not exist")
+                );
+        if (existingImage.getImageBytes() == null) {
+            existingImage = convertBaseStringToImage(defaultImage);
+            existingImage.setId(id);
+        }
+        return existingImage;
+    }
+
+    public Image updateUserImageById(Long id, String baseString) {
+        imageRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("image is not exist"));
+        Image existingImage;
+        if (baseString != null) {
+            existingImage = convertBaseStringToImage(baseString);
+        } else {
+            existingImage = new Image();
+        }
+        existingImage.setId(id);
+
+        imageRepository.save(existingImage);
+
+        return existingImage;
+    }
 }

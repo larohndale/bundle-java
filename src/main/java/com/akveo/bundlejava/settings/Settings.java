@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
+import java.util.Objects;
 
 @Entity
 @Table(name = "settings")
@@ -42,5 +43,29 @@ public class Settings {
 
     public void setThemeName(String themeName) {
         this.themeName = themeName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Settings settings = (Settings) o;
+        return Objects.equals(id, settings.id) &&
+                Objects.equals(themeName, settings.themeName) &&
+                Objects.equals(user, settings.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, themeName, user);
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "id=" + id +
+                ", themeName='" + themeName + '\'' +
+                ", user=" + user +
+                '}';
     }
 }
