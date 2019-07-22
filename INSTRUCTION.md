@@ -8,17 +8,30 @@ This is readme and instructions how start using backend bundle from Akveo. Backe
 
 1) install Java 8 [here](https://www.oracle.com/technetwork/java/javase/downloads/index.html) and NodeJs [here](https://nodejs.org/en/download/)
 
-2) in folder `java` run spring boot with following command `mvn spring-boot:run`
+2) in folder `backend` run spring boot with following command `mvn spring-boot:run`
 
-3) in folder `angular` run commands 
+3) in folder `frontend` run commands 
 ```
 npm install
 npm start 
 ```
 
-4) run `http://localhost:4200`
+4) verify that frontend/src/environments/environment.ts contains correct url to api:
 
-5) create new user or login with default credential using interface and start working with app
+```
+apiUrl: 'http://localhost:8080',
+```
+
+5) run `http://localhost:4200`
+
+6) in login page of application create new user or login with default credential using interface and start working with app
+
+## Test User / Password
+
+You can use these test users for application testing:
+
+1. admin@admin.com / password
+2. user@user.com / password1
 
 ## In-memory database
 
@@ -30,13 +43,6 @@ For demo purpose, we use an in-memory database - H2. You don't need to do any pr
 4) click `connect` and you can use web interface for H2 database
 
 Every time you rerun the application, the database will be recreated and filled with data from `data.sql`. For production purposes, please remove this file and use real Database
-
-## Test User / Password
-
-You can use these test users for application testing:
-
-1. admin@admin.com / password
-2. user@user.com / password1
 
 ## Tech Stack
 
@@ -85,8 +91,8 @@ To use swagger with token authentication please follow these steps:
 Code is organized in following structure
 
  - Main Folder
-    - angular // this floder contains all UI code
-    - java // server side java code
+    - frontend // this floder contains all UI code
+    - backend // server side java code
         - .mvn
             - wrapper // allow to build project without having to install Maven first
         - src
