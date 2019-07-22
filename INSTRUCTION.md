@@ -63,11 +63,11 @@ Backend Part uses following libraries and frameworks:
 
 Frontend Part is basically Angular project with following stack:
 
- - Angular 7.0.3
- - RxJs 6.3.0
- - Nebular 3.1.0
+ - Angular 8.0.0
+ - RxJs 6.5.2
+ - Nebular 4.1.2
  - Eva-icons 1.1.0
- - echarts 4.0.2
+ - Typescript 3.4.5
  - ...
 
 Frontend part is based on the latest ngx-admin dashboard template, but with edited UI components and service layer for data getting. Bundle UI supports both data from API and mock data, you can switch it inside file `core.module.ts` by editing `NB_CORE_PROVIDERS` collection.
