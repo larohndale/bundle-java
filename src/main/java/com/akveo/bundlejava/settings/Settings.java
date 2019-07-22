@@ -1,5 +1,7 @@
 package com.akveo.bundlejava.settings;
+
 import com.akveo.bundlejava.user.User;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,10 +9,14 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "settings")
-public class Settings {
+public class Settings implements Serializable {
+
+    private static final long serialVersionUID = 2168089762510982363L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
