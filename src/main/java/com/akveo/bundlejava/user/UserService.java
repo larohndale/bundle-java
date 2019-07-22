@@ -32,6 +32,8 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Service
 public class UserService {
 
@@ -151,7 +153,7 @@ public class UserService {
 
     private Image convertBaseStringToImage(String baseString) {
         Image userImage = new Image();
-        byte[] decodedString = Base64.getDecoder().decode(baseString.getBytes());
+        byte[] decodedString = Base64.getDecoder().decode(baseString.getBytes(UTF_8));
         userImage.setImageBytes(decodedString);
         return userImage;
     }
