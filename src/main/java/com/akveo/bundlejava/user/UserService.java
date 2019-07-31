@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
@@ -153,7 +154,7 @@ public class UserService {
 
     private Image convertBaseStringToImage(String baseString) {
         Image userImage = new Image();
-        byte[] decodedString = Base64.getDecoder().decode(baseString.getBytes(UTF_8));
+        byte[] decodedString = Base64.getDecoder().decode(baseString.getBytes(StandardCharsets.UTF_8));
         userImage.setImageBytes(decodedString);
         return userImage;
     }

@@ -7,6 +7,10 @@ import static com.akveo.bundlejava.authentication.AuthControllerPasswordTest.EXI
 import static com.akveo.bundlejava.authentication.AuthControllerPasswordTest.TOKEN_PREFIX;
 import com.akveo.bundlejava.authentication.LoginDTO;
 import com.akveo.bundlejava.authentication.RefreshTokenDTO;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Locale;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,6 +86,42 @@ public class UserControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(updatedUser);
+    }
+
+    @Test
+    public void getUserImage() {
+        RefreshTokenDTO login = login();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+
+        ResponseEntity<String> response = restTemplate.exchange("/users/" + EXISTING_ID + "/photo?token=" + login.getToken().getAccessToken(), HttpMethod.GET,
+                new HttpEntity<>(headers), String.class);
+
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
+
+    @Test
+    public void updateUserImage() {
+        RefreshTokenDTO login = login();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        ResponseEntity<String> existingImageBase64String = restTemplate.
+                exchange("/users/" + EXISTING_ID + "/photo" + login.getToken().getAccessToken(), HttpMethod.GET,
+                new HttpEntity<>(headers), String.class);
+
+        Image updatedImage = new Image(existingImageBase64String.getBody().getBytes());
+        updatedImage.setId(USER_ID);
+        updatedImage.setImageBytes(Base64.getDecoder().decode(BASE_STRING.getBytes(StandardCharsets.UTF_8)));
+
+        ResponseEntity<Image> response = restTemplate.exchange("/users/" + EXISTING_ID + "/photo", HttpMethod.PUT,
+                new HttpEntity<>(BASE_STRING, headers), Image.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(updatedImage);
     }
 
     @Test

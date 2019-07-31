@@ -9,13 +9,13 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
+import java.io.Serializable;
 import java.util.Objects;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "settings")
 public class Settings implements Serializable {
-
     private static final long serialVersionUID = 2168089762510982363L;
 
     @Id
