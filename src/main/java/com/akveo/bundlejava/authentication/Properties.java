@@ -39,8 +39,6 @@ public class Properties {
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
-
-
     public String getAccessTokenSecretKey() {
         return accessTokenSecretKey;
     }

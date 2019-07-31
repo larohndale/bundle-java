@@ -1,8 +1,5 @@
 package com.akveo.bundlejava.image;
 
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +14,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "image")
 public class Image implements Serializable {
-
     private static final long serialVersionUID = -8696224341195777678L;
 
     @Id
@@ -39,19 +35,16 @@ public class Image implements Serializable {
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public Image(byte[] image) {
-        this.image = image;
+    public Image(byte[] imageBytes) {
+        this.image = imageBytes == null ? null : imageBytes.clone();
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     public byte[] getImageBytes() {
-        return image;
+        return image == null ? null : image.clone();
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setImageBytes(byte[] imageBytes) {
-        this.image = imageBytes;
+        this.image = imageBytes == null ? null : imageBytes.clone();
     }
 
     @Override
