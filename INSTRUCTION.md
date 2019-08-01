@@ -10,15 +10,21 @@ This is readme and instructions how start using backend bundle from Akveo. Backe
 
 2) in folder `java` run spring boot with following command `mvn spring-boot:run`
 
-3) in folder `angular` run commands 
+3) open `frontend/src/environments/environment.ts` and put correct API url for .NET. Please check the port number
+     
+    ```js
+      apiUrl: 'https://localhost:8080',
+    ```
+
+4) in folder `angular` run commands 
 ```
 npm install
 npm start 
 ```
 
-4) run `http://localhost:4200`
+5) run `http://localhost:4200`
 
-5) create new user or login with default credential using interface and start working with app
+6) create new user or login with default credential using interface and start working with app
 
 ## In-memory database
 
