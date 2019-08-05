@@ -11,8 +11,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
 import java.io.Serializable;
 import java.util.Objects;
-import java.io.Serializable;
-
 @Entity
 @Table(name = "settings")
 public class Settings implements Serializable {
@@ -64,14 +62,5 @@ public class Settings implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, themeName, user);
-    }
-
-    @Override
-    public String toString() {
-        return "Settings{" +
-                "id=" + id +
-                ", themeName='" + themeName + '\'' +
-                ", user=" + user +
-                '}';
     }
 }

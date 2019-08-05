@@ -70,9 +70,9 @@ public class AuthControllerOAuthTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Token currentToken = refreshTokenDTO().getToken();
+        Tokens currentTokens = refreshTokenDTO().getTokens();
         RefreshTokenDTO requestToken = new RefreshTokenDTO(
-            new Token(0L, currentToken.getAccessToken(), currentToken.getRefreshToken()));
+            new Tokens(0L, currentTokens.getAccessToken(), currentTokens.getRefreshToken()));
 
         HttpEntity<RefreshTokenDTO> entity = new HttpEntity<>(refreshTokenDTO(), headers);
 

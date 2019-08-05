@@ -6,26 +6,28 @@
 
 package com.akveo.bundlejava.authentication;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class RefreshTokenDTO {
 
     @NotNull
-    private Token token;
+    @JsonProperty("token")
+    private Tokens tokens;
 
     public RefreshTokenDTO() {
     }
 
-    public RefreshTokenDTO(@NotEmpty @NotNull Token token) {
-        this.token = token;
+    public RefreshTokenDTO(@NotEmpty @NotNull Tokens tokens) {
+        this.tokens = tokens;
     }
 
-    public Token getToken() {
-        return token;
+    public Tokens getTokens() {
+        return tokens;
     }
 
-    public void setToken(Token token) {
-        this.token = token;
+    public void setTokens(Tokens tokens) {
+        this.tokens = tokens;
     }
 }

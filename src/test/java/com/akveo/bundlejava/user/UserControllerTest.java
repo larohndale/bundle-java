@@ -61,7 +61,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
 
         ResponseEntity<UserDTO> response = restTemplate.exchange("/users/" + EXISTING_ID, HttpMethod.GET,
             new HttpEntity<>(headers), UserDTO.class);
@@ -75,7 +75,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
         ResponseEntity<UserDTO> existingUser = restTemplate.exchange("/users/" + EXISTING_ID, HttpMethod.GET,
             new HttpEntity<>(headers), UserDTO.class);
         UserDTO updatedUser = existingUser.getBody();
@@ -93,9 +93,9 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
 
-        ResponseEntity<String> response = restTemplate.exchange("/users/" + EXISTING_ID + "/photo?token=" + login.getToken().getAccessToken(), HttpMethod.GET,
+        ResponseEntity<String> response = restTemplate.exchange("/users/" + EXISTING_ID + "/photo?token=" + login.getTokens().getAccessToken(), HttpMethod.GET,
                 new HttpEntity<>(headers), String.class);
 
 
@@ -108,9 +108,9 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
         ResponseEntity<String> existingImageBase64String = restTemplate.
-                exchange("/users/" + EXISTING_ID + "/photo" + login.getToken().getAccessToken(), HttpMethod.GET,
+                exchange("/users/" + EXISTING_ID + "/photo" + login.getTokens().getAccessToken(), HttpMethod.GET,
                 new HttpEntity<>(headers), String.class);
 
         Image updatedImage = new Image(existingImageBase64String.getBody().getBytes());
@@ -129,7 +129,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
         ResponseEntity<UserDTO> existingUser = restTemplate.exchange("/users/" + EXISTING_ID, HttpMethod.GET,
             new HttpEntity<>(headers), UserDTO.class);
         UserDTO userForDelete = existingUser.getBody();
@@ -147,7 +147,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
 
         ResponseEntity<UserDTO> response = restTemplate.exchange("/users/current", HttpMethod.GET,
             new HttpEntity<>(headers), UserDTO.class);
@@ -161,7 +161,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
         ResponseEntity<UserDTO> existingUser = restTemplate.exchange("/users/current", HttpMethod.GET,
             new HttpEntity<>(headers), UserDTO.class);
         UserDTO updatedUser = existingUser.getBody();
@@ -179,7 +179,7 @@ public class UserControllerTest {
         RefreshTokenDTO login = login();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
 
         UserDTO newUser = new UserDTO(USERNAME, NEW_EMAIL);
         newUser.setId(USER_ID);

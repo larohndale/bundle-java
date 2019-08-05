@@ -9,17 +9,17 @@ package com.akveo.bundlejava.authentication;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class Token {
+public class Tokens {
     private Long expiresIn;
 
     private String accessToken;
 
     private String refreshToken;
 
-    public Token() {
+    public Tokens() {
     }
 
-    public Token(Long expiresIn, String accessToken, String refreshToken) {
+    public Tokens(Long expiresIn, String accessToken, String refreshToken) {
         this.expiresIn = expiresIn;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
@@ -54,4 +54,6 @@ public class Token {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+
 }

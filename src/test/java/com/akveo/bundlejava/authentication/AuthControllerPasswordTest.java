@@ -45,7 +45,7 @@ public class AuthControllerPasswordTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getToken().getAccessToken());
+        headers.set(AUTH_HEADER, TOKEN_PREFIX + login.getTokens().getAccessToken());
 
         ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO(NEW_PASSWORD);
         HttpEntity<ResetPasswordDTO> entity = new HttpEntity<>(resetPasswordDTO, headers);
