@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.authentication;
 
+import com.akveo.bundlejava.authentication.exception.TokenValidationException;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
 import io.jsonwebtoken.Claims;
@@ -38,18 +39,22 @@ public class TokenService {
 
     private UserDetailsService userDetailsService;
 
+    private AuthenticationTokenService authenticationTokenService;
+
     @Autowired
     public TokenService(UserDetailsService userDetailsService,
+                        AuthenticationTokenService authenticationTokenService,
                         Properties properties) {
         this.userDetailsService = userDetailsService;
+        this.authenticationTokenService = authenticationTokenService;
         accessTokenSecretKey = properties.getAccessTokenSecretKey();
         accessTokenValidityInMilliseconds = properties.getAccessTokenValidityInMilliseconds();
         refreshTokenSecretKey = properties.getRefreshTokenSecretKey();
         refreshTokenValidityInMilliseconds = properties.getRefreshTokenValidityInMilliseconds();
     }
 
-    Token createToken(User user) {
-        Token token = new Token();
+    Tokens createToken(User user) {
+        Tokens token = new Tokens();
         long expiresIn = expiration(accessTokenValidityInMilliseconds);
 
         token.setAccessToken(createAccessToken(user));
@@ -59,24 +64,20 @@ public class TokenService {
         return token;
     }
 
-    Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getEmailFromAccessToken(token));
+    Authentication getAuthentication(AuthenticationToken token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(token.getEmailFromAccessToken());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
-    String getEmailFromAccessToken(String token) throws JwtException {
-        return Jwts.parser().setSigningKey(accessTokenSecretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     String getEmailFromRefreshToken(String token) throws JwtException {
         return Jwts.parser().setSigningKey(refreshTokenSecretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    String resolveToken(HttpServletRequest req) {
+    AuthenticationToken resolveToken(HttpServletRequest req) throws TokenValidationException {
         String bearer = "Bearer ";
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith(bearer)) {
-            return bearerToken.substring(bearer.length());
+            return authenticationTokenService.createToken(bearerToken.substring(bearer.length()));
         }
         return null;
     }

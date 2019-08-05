@@ -42,7 +42,7 @@ public class AuthService {
         this.tokenService = tokenService;
     }
 
-    Token register(SignUpDTO signUpDTO) throws UserAlreadyExistsHttpException {
+    Tokens register(SignUpDTO signUpDTO) throws UserAlreadyExistsHttpException {
         try {
             User user = userService.register(signUpDTO);
             return createToken(user);
@@ -51,7 +51,7 @@ public class AuthService {
         }
     }
 
-    Token login(LoginDTO loginDTO) throws UserNotFoundHttpException {
+    Tokens login(LoginDTO loginDTO) throws UserNotFoundHttpException {
         try {
             Authentication authentication = createAuthentication(loginDTO);
             BundleUserDetailsService.BundleUserDetails userDetails =
@@ -65,9 +65,9 @@ public class AuthService {
         }
     }
 
-    Token refreshToken(RefreshTokenDTO refreshTokenDTO) throws InvalidTokenHttpException {
+    Tokens refreshToken(RefreshTokenDTO refreshTokenDTO) throws InvalidTokenHttpException {
         try {
-            String email = tokenService.getEmailFromRefreshToken(refreshTokenDTO.getToken().getRefreshToken());
+            String email = tokenService.getEmailFromRefreshToken(refreshTokenDTO.getTokens().getRefreshToken());
             User user = userService.findByEmail(email);
             return createToken(user);
         } catch (JwtException | UserNotFoundException e) {
@@ -79,7 +79,7 @@ public class AuthService {
         return new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
     }
 
-    private Token createToken(User user) {
+    private Tokens createToken(User user) {
         return tokenService.createToken(user);
     }
 

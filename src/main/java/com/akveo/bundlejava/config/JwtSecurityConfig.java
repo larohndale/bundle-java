@@ -8,7 +8,6 @@ package com.akveo.bundlejava.config;
 
 import com.akveo.bundlejava.authentication.JwtConfigurer;
 import com.akveo.bundlejava.authentication.TokenService;
-import com.akveo.bundlejava.authentication.TokenValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,6 @@ import java.util.Arrays;
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenService tokenService;
-    private TokenValidationService tokenValidationService;
 
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
@@ -40,11 +38,8 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
-    public JwtSecurityConfig(TokenService tokenService,
-                            TokenValidationService tokenValidationService
-    ) {
+    public JwtSecurityConfig(TokenService tokenService) {
         this.tokenService = tokenService;
-        this.tokenValidationService = tokenValidationService;
     }
 
     public JwtSecurityConfig(TokenService tokenService, boolean disableDefaults) {
@@ -77,7 +72,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
 
-        http.apply(new JwtConfigurer(tokenService, tokenValidationService));
+        http.apply(new JwtConfigurer(tokenService));
 
         http.cors().and();
 

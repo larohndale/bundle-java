@@ -8,20 +8,19 @@ package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.resetpassword.RequestPasswordService;
-import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordService;
 import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordService;
 import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordDTO;
+import com.akveo.bundlejava.authentication.resetpassword.RestorePasswordService;
 import com.akveo.bundlejava.authentication.resetpassword.RequestPasswordDTO;
 import com.akveo.bundlejava.authentication.resetpassword.ResetPasswordDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -55,8 +54,10 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) {
-        Token token = authService.login(loginDTO);
-        return toResponse(token);
+        Tokens tokens = authService.login(loginDTO);
+        ResponseEntity r = toResponse(tokens);
+        return r;
+
     }
 
     /**
@@ -85,8 +86,8 @@ public class AuthController {
             throw new PasswordsDontMatchException();
         }
 
-        Token token = authService.register(signUpDTO);
-        return toResponse(token);
+        Tokens tokens = authService.register(signUpDTO);
+        return toResponse(tokens);
     }
 
     /**
@@ -131,12 +132,12 @@ public class AuthController {
      * @return new token
      */
     @PostMapping("/refresh-token")
-    public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
-        Token token = authService.refreshToken(refreshTokenDTO);
-        return toResponse(token);
+    public ResponseEntity<RefreshTokenDTO> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
+        Tokens tokens = authService.refreshToken(refreshTokenDTO);
+        return toResponse(tokens);
     }
 
-    private ResponseEntity toResponse(Token token) {
-        return ok(Collections.singletonMap("token", token));
+    private ResponseEntity<RefreshTokenDTO> toResponse(Tokens tokens) {
+        return ok(new RefreshTokenDTO(tokens));
     }
 }

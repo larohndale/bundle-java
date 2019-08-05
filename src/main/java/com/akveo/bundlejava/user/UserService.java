@@ -7,10 +7,10 @@
 package com.akveo.bundlejava.user;
 
 import com.akveo.bundlejava.authentication.SignUpDTO;
-import com.akveo.bundlejava.authentication.TokenValidationService;
 import com.akveo.bundlejava.authentication.exception.PasswordsDontMatchException;
 import com.akveo.bundlejava.authentication.exception.TokenValidationException;
 import com.akveo.bundlejava.authentication.exception.UserNotFoundHttpException;
+import com.akveo.bundlejava.authentication.AuthenticationTokenService;
 import com.akveo.bundlejava.image.Image;
 import com.akveo.bundlejava.image.ImageRepository;
 import com.akveo.bundlejava.role.RoleService;
@@ -33,8 +33,6 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 @Service
 public class UserService {
 
@@ -44,7 +42,7 @@ public class UserService {
     private RoleService roleService;
     private ImageRepository imageRepository;
     private SettingsService settingsService;
-    private TokenValidationService tokenValidationService;
+    private AuthenticationTokenService authenticationTokenService;
 
     @Value("${user.defaultImage}")
     private String defaultImage;
@@ -56,14 +54,14 @@ public class UserService {
                        SettingsService settingsService,
                        RoleService roleService,
                        ImageRepository imageRepository,
-                       TokenValidationService tokenValidationService) {
+                       AuthenticationTokenService authenticationTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.settingsService = settingsService;
+        this.authenticationTokenService = authenticationTokenService;
         this.roleService = roleService;
         this.imageRepository = imageRepository;
-        this.tokenValidationService = tokenValidationService;
     }
 
     public User findByEmail(String email) throws UserNotFoundException {
@@ -195,7 +193,7 @@ public class UserService {
 
     public Image getImageById(Long id, String token) {
         try {
-            tokenValidationService.isValid(token);
+            authenticationTokenService.createToken(token);
         } catch (TokenValidationException e) {
             throw new AccessTokenNotFoundHttpException("Access token wasn't found", HttpStatus.NOT_FOUND);
         }
