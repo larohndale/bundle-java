@@ -7,7 +7,6 @@
 package com.akveo.bundlejava.authentication;
 
 import com.akveo.bundlejava.authentication.exception.AuthenticationException;
-import com.akveo.bundlejava.authentication.exception.TokenValidationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -38,8 +37,6 @@ public class JwtTokenFilter extends GenericFilterBean {
 
             Authentication auth = tokenService.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
-        } catch (TokenValidationException e) {
-            SecurityContextHolder.clearContext();
         } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
         }
