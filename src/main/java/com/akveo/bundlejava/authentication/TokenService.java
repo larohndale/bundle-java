@@ -6,7 +6,7 @@
 
 package com.akveo.bundlejava.authentication;
 
-import com.akveo.bundlejava.authentication.exception.TokenValidationException;
+import com.akveo.bundlejava.authentication.exception.AuthenticationException;
 import com.akveo.bundlejava.role.Role;
 import com.akveo.bundlejava.user.User;
 import io.jsonwebtoken.Claims;
@@ -65,7 +65,7 @@ public class TokenService {
     }
 
     Authentication getAuthentication(AuthenticationToken token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(token.getEmailFromAccessToken());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(token.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -73,13 +73,17 @@ public class TokenService {
         return Jwts.parser().setSigningKey(refreshTokenSecretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    AuthenticationToken resolveToken(HttpServletRequest req) throws TokenValidationException {
+    AuthenticationToken resolveToken(HttpServletRequest req) throws AuthenticationException {
         String bearer = "Bearer ";
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith(bearer)) {
-            return authenticationTokenService.createToken(bearerToken.substring(bearer.length()));
+        if (bearerToken == null) {
+            throw new AuthenticationException("Authorization header should be present");
         }
-        return null;
+        if (!bearerToken.startsWith(bearer)) {
+            throw new AuthenticationException("Authorization header should begin with Bearer");
+        }
+
+        return authenticationTokenService.createToken(bearerToken.substring(bearer.length()));
     }
 
     private String createAccessToken(User user) {

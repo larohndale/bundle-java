@@ -282,5 +282,27 @@ public class User implements Serializable {
                 roles, settings, street, city, zipCode, lat, lng, createdAt, updatedAt, image);
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", roles=" + roles +
+                ", settings=" + settings +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", image=" + image +
+                '}';
+    }
 }

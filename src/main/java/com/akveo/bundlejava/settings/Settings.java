@@ -63,4 +63,13 @@ public class Settings implements Serializable {
     public int hashCode() {
         return Objects.hash(id, themeName, user);
     }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "id=" + id +
+                ", themeName='" + themeName + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }
