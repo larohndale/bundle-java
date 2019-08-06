@@ -15,6 +15,6 @@ public class AuthenticationTokenService {
     }
 
     public AuthenticationToken createToken(String token) throws TokenValidationException {
-        return new AuthenticationToken(token, properties);
+        return new AuthenticationToken(token, properties.getAccessTokenSecretKey());
     }
 }

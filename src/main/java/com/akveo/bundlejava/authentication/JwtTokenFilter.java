@@ -6,6 +6,7 @@
 
 package com.akveo.bundlejava.authentication;
 
+import com.akveo.bundlejava.authentication.exception.AuthenticationException;
 import com.akveo.bundlejava.authentication.exception.TokenValidationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             throws IOException, ServletException {
         try {
             AuthenticationToken token = tokenService.resolveToken((HttpServletRequest) req);
-            if (token == null || token.isExpired()) {
+            if (token.isExpired()) {
                 filterChain.doFilter(req, res);
                 return;
             }
@@ -38,6 +39,8 @@ public class JwtTokenFilter extends GenericFilterBean {
             Authentication auth = tokenService.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (TokenValidationException e) {
+            SecurityContextHolder.clearContext();
+        } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
         }
 

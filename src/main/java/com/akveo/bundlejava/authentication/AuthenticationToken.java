@@ -9,18 +9,13 @@ import io.jsonwebtoken.Jwts;
 import java.util.Date;
 
 public class AuthenticationToken {
-    private String token;
-
-    private Properties properties;
 
     private Jws<Claims> claims;
 
-    public AuthenticationToken(String token, Properties properties) throws TokenValidationException {
-        this.token = token;
-        this.properties = properties;
+    public AuthenticationToken(String token, String accessTokenSecretKey) throws TokenValidationException {
         try {
             claims = Jwts.parser()
-                    .setSigningKey(properties.getAccessTokenSecretKey())
+                    .setSigningKey(accessTokenSecretKey)
                     .parseClaimsJws(token);
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenValidationException("Expired or invalid JWT token");
@@ -31,10 +26,7 @@ public class AuthenticationToken {
         return claims.getBody().getExpiration().before(new Date());
     }
 
-    //package private
-    String getEmailFromAccessToken() throws JwtException {
-        return Jwts.parser().setSigningKey(properties.getAccessTokenSecretKey()).
-                parseClaimsJws(token).getBody().getSubject();
+    String getEmail() throws JwtException {
+        return claims.getBody().getSubject();
     }
-
 }
