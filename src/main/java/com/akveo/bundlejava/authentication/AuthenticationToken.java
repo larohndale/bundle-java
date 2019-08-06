@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class AuthenticationToken {
 
-    private Jws<Claims> claims;
+    private final Jws<Claims> claims;
 
     public AuthenticationToken(String token, String accessTokenSecretKey) throws TokenValidationException {
         try {
