@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -26,7 +27,8 @@ public class OrderSpecification implements Specification<Order> {
                 return builder.like(
                         root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
             } else {
-                return builder.equal(root.get(criteria.getKey()), criteria.getValue());
+                Join<Order,Country> orderCountry = root.join("country");
+                return builder.equal(orderCountry.get("name"), criteria.getValue());
             }
         }
         return null;
