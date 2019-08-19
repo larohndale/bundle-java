@@ -6,31 +6,22 @@
 
 package com.akveo.bundlejava.user;
 
+import com.akveo.bundlejava.ecommerce.entity.Order;
+import com.akveo.bundlejava.ecommerce.entity.TrackableEntity;
+import com.akveo.bundlejava.ecommerce.entity.UserActivity;
 import com.akveo.bundlejava.image.Image;
 import com.akveo.bundlejava.role.Role;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.validation.constraints.NotEmpty;
 import com.akveo.bundlejava.settings.Settings;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -42,6 +33,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "first_name")
@@ -114,6 +106,38 @@ public class User implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Image image;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<UserActivity> userActivities;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "created_by_user_id", referencedColumnName = "id")
+    private List<Order> createdOrders;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "updated_by_user_id", referencedColumnName = "id")
+    private List<Order> updatedOrders;
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private List<Order> ordersCreatedBy;
+//
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private List<Order> ordersUpdatedBy;
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private List<UserActivity> userActivities;
+//
+//    public List<UserActivity> getUserActivities() {
+//        return userActivities;
+//    }
+//
+//    public void setUserActivities(List<UserActivity> userActivities) {
+//        this.userActivities = userActivities;
+//    }
 
     public Image getImage() {
         return image;
