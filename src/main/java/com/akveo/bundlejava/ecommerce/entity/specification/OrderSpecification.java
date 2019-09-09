@@ -28,9 +28,12 @@ public class OrderSpecification implements Specification<Order> {
                         root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
             } else {
                 Join<Order,Country> orderCountry = root.join("country");
-                return builder.equal(orderCountry.get("name"), criteria.getValue());
+                String lowCase = ((String)criteria.getValue()).toLowerCase();
+                return builder.like(builder.lower(orderCountry.get("name")),
+                        "%" + lowCase + "%");
             }
         }
+
         return null;
     }
 }

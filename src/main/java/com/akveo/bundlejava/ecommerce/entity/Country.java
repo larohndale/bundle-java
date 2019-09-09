@@ -7,6 +7,10 @@ import java.util.List;
 @Entity
 @Table(name = "country")
 public class Country {
+
+    public Country() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

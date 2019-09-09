@@ -3,16 +3,17 @@ package com.akveo.bundlejava.ecommerce.DTO;
 import com.akveo.bundlejava.ecommerce.DTO.CountryDTO;
 import com.akveo.bundlejava.ecommerce.DTO.MoneyDTO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class OrderDTO {
-    public Long id;
-    public String name;
-    public Date date;
-    public MoneyDTO sum;
-    public String type;
-    public String status;
-    public CountryDTO country;
+    private Long id;
+    private String name;
+    private LocalDateTime date;
+    private MoneyDTO sum;
+    private String type;
+    private String status;
+    private CountryDTO country;
 
     public Long getId() {
         return id;
@@ -30,11 +31,11 @@ public class OrderDTO {
         this.name = name;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -14,11 +14,11 @@ public abstract class TrackableEntity {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "created_by_user_id", referencedColumnName = "id")
     private User createdByUserId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "updated_by_user_id", referencedColumnName = "id")
     private User updatedByUserId;
 

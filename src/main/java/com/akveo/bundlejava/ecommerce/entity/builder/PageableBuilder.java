@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PageableBuilder {
     public Pageable build(OrderGridFilter filter) {
-        int pageNumber = filter.getPageNumber();
+        int pageNumber = filter.getPageNumber() - 1;
         int pageSize = filter.getPageSize();
         String sortField = filter.getSortBy();
         String orderBy = filter.getOrderBy() == null ? "empty" : filter.getOrderBy();

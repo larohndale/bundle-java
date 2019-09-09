@@ -69,7 +69,6 @@ public class Settings implements Serializable {
         return "Settings{" +
                 "id=" + id +
                 ", themeName='" + themeName + '\'' +
-                ", user=" + user +
                 '}';
     }
 }

@@ -3,20 +3,17 @@ package com.akveo.bundlejava.ecommerce.entity.enums;
 import java.util.stream.Stream;
 
 public enum OrderStatusEnum {
-    ALL(-1),
     PAYMENT(1),
-    CANCELLED(0);
-    private final int code;
+    CANCELLED(2),
+    ALL(3);
 
-    private OrderStatusEnum(int code) {
-        this.code = code;
-    }
+    private int value;
 
-    public static String[] names() {
-        return Stream.of(OrderTypeEnum.values()).map(OrderTypeEnum::name).toArray(String[]::new);
-    }
+    OrderStatusEnum(int value) { this.value = value; }
 
-    public int code() {
-        return code;
+    public int getValue() { return value; }
+
+        public static String[] names() {
+        return Stream.of(OrderStatusEnum.values()).map(OrderStatusEnum::name).toArray(String[]::new);
     }
 }

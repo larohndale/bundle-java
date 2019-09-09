@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ public class DataGenerator {
     private Map<String, String> countries;
     private static final String SCHEMA = "demo_core";
     private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+    private static final int CREATED_BY_USER_ID = 1;
+    private static final int UPDATED_BY_USER_ID = 1;
 
     private String getCurrentLocalDateTimeStamp() {
         return LocalDateTime.now()
@@ -38,15 +41,19 @@ public class DataGenerator {
     }
 
     private String generateRandomDate(LocalDateTime startDate, LocalDateTime endDate) {
+
         if (startDate == null) {
-            startDate = LocalDateTime.of(2010, Month.JANUARY, 1, 1, 1);
+            startDate = LocalDateTime.of(2009, Month.JANUARY, 1, 1, 1);
         }
         if (endDate == null) {
             endDate = LocalDateTime.now();
         }
-        int range = endDate.getDayOfYear() - startDate.getDayOfYear();
+        int deltaYears = endDate.getYear() - startDate.getYear();
+        int range = endDate.getDayOfYear() - startDate.getDayOfYear() + deltaYears * 365;
 
         startDate = startDate.plusDays(generateInt(1, range));
+
+
         return startDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
     }
 
@@ -59,7 +66,7 @@ public class DataGenerator {
     }
 
     private int generateRandomType() {
-        return generateInt(1, 6);
+        return generateInt(1, 5);
     }
 
     private BigDecimal generateRandomValue() {
@@ -83,13 +90,17 @@ public class DataGenerator {
     }
 
     private void appendOrders() {
-        LocalDateTime startDate = LocalDateTime.of(2015, Month.JANUARY, 1, 1, 1);
-        sqlStatement.append("INSERT INTO orders (name, date, value, currency, type, status, country_id) VALUES ");
+        LocalDateTime startDate = LocalDateTime.of(2013, Month.JANUARY, 1, 1, 1);
+        sqlStatement.append("INSERT INTO orders (name, created_date, updated_date, date, value, currency," +
+                " type, status, country_id, created_by_user_id, updated_by_user_id) VALUES ");
+
         String orderStr = Stream.generate(() -> 0)
-                .limit(1000)
-                .map(entry -> "('Order " + generateInt(1, 5000) + "', '" +
+                .limit(2000)
+                .map(entry -> "('Order " + generateInt(1, 20000) + "', '" +
+                        getCurrentLocalDateTimeStamp() + "', '" + getCurrentLocalDateTimeStamp() + "', '" +
                         generateRandomDate(startDate, null) + "', " +  generateRandomValue() + ", 'USD', " + generateRandomType()+ ", " +
-                        generateRandomStatus() + ", " + generateInt(1, countries.size()) + ")")
+                        generateRandomStatus() + ", " + generateInt(1, countries.size()) + ", " +
+                        CREATED_BY_USER_ID + ", " + UPDATED_BY_USER_ID + ")")
                 .collect(Collectors.joining(","));
         sqlStatement.append(orderStr);
         sqlStatement.append(";");
@@ -127,17 +138,10 @@ public class DataGenerator {
     }
 
     public void doSqlQuery(EntityManager entityManager) {
-
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery(sqlStatement.toString()).executeUpdate();
 
         entityManager.getTransaction().commit();
-
-//        entityManager.getTransaction().begin();
-//        entityManager.createNativeQuery(appendOrders()).executeUpdate();
-//
-//        entityManager.getTransaction().commit();
-
     }
 
     private Map<String, String> getCountriesMap() {
@@ -322,17 +326,17 @@ public class DataGenerator {
         }};
     }
 
-    private static List<String> getNamesList(int count) {
-        return Stream.of("Rostand Simon", "Petulia Samuel", "Bacon Mathghamhain", "Adlei Michael", "Damian IvorJohn", "Fredenburg Neil", "Strader O''Neal", "Meill Donnell", "Crowell O''Donnell",
-                "Lenssen Rory", "Jac Names", "Budge Mahoney", "Bondy Simon", "Bilow Ahearn", "Weintrob Farrell", "Tristan Cathasach", "Baxy Bradach", "Utta Damhan", "Brag Treasach",
-                "Vallie Kelly", "Trutko Aodha", "Mellins Cennetig", "Zurek Casey", "Star O''Neal", "Hoffer Names", "Sturges Macshuibhne", "Lifton Sioda", "Rochell Ahearn", "Lynsey Mcmahon",
-                "Delp Seaghdha", "Sproul O''Brien", "Omar Ahearn", "Keriann Bhrighde", "Killoran Sullivan", "Olette Riagain", "Kohn Gorman", "Shimberg Maurice", "Nalda Aodh",
-                "Livvie Casey", "Zoie Treasach", "Kletter Daly", "Sandy Mckay", "Ern O''Neal", "Loats Maciomhair", "Marlena Mulryan", "Hoshi Naoimhin", "Schmitt Whalen",
-                "Patterson Raghailligh", "Ardeen Kelly", "Rasla Simon", "Douty Cennetig", "Giguere Names", "Dorina Clark", "Rothmuller Simon", "Shabbir Delaney", "Placidia Bradach",
-                "Savior Keefe", "Concettina Maguire", "Malynda Muirchertach", "Vanzant Fearghal", "Schroder Ruaidh", "Ainslie Ciardha", "Richter Colman", "Gianni Macghabhann",
-                "Norvan O''Boyle", "Polak Mcneil", "Bridges Macghabhann", "Eisenberg Samuel", "Thenna Daly", "Moina Mcmahon", "Gasper Whelan", "Hutt O''Keefe", "Quintin Names",
-                "Towny Reynold", "Viviane Ceallachan", "Girovard Power", "Fanchon Flann", "Nickolai Meadhra", "Polash Login", "Cacilia Macghabhann", "Chaffee Rory", "Baseler Conchobhar",
-                "Amathiste Cuidightheach", "Ishii Riagain", "Marieann Damhan", "Rangel Dubhain", "Alarick Fionn", "Humfrey Rory", "Mable O''Mooney", "Jemie Macdermott", "Hogen Rhys",
-                "Cazzie Mohan", "Airlie Reynold", "Safire O''Hannigain", "Strephonn Nuallan", "Brion Eoghan", "Banquer Seaghdha", "Sedgewinn Mcguire", "Alma Macghabhann", "Durward Mcnab").collect(Collectors.toList());
-    }
+//    private static List<String> getNamesList(int count) {
+//        return Stream.of("Rostand Simon", "Petulia Samuel", "Bacon Mathghamhain", "Adlei Michael", "Damian IvorJohn", "Fredenburg Neil", "Strader O''Neal", "Meill Donnell", "Crowell O''Donnell",
+//                "Lenssen Rory", "Jac Names", "Budge Mahoney", "Bondy Simon", "Bilow Ahearn", "Weintrob Farrell", "Tristan Cathasach", "Baxy Bradach", "Utta Damhan", "Brag Treasach",
+//                "Vallie Kelly", "Trutko Aodha", "Mellins Cennetig", "Zurek Casey", "Star O''Neal", "Hoffer Names", "Sturges Macshuibhne", "Lifton Sioda", "Rochell Ahearn", "Lynsey Mcmahon",
+//                "Delp Seaghdha", "Sproul O''Brien", "Omar Ahearn", "Keriann Bhrighde", "Killoran Sullivan", "Olette Riagain", "Kohn Gorman", "Shimberg Maurice", "Nalda Aodh",
+//                "Livvie Casey", "Zoie Treasach", "Kletter Daly", "Sandy Mckay", "Ern O''Neal", "Loats Maciomhair", "Marlena Mulryan", "Hoshi Naoimhin", "Schmitt Whalen",
+//                "Patterson Raghailligh", "Ardeen Kelly", "Rasla Simon", "Douty Cennetig", "Giguere Names", "Dorina Clark", "Rothmuller Simon", "Shabbir Delaney", "Placidia Bradach",
+//                "Savior Keefe", "Concettina Maguire", "Malynda Muirchertach", "Vanzant Fearghal", "Schroder Ruaidh", "Ainslie Ciardha", "Richter Colman", "Gianni Macghabhann",
+//                "Norvan O''Boyle", "Polak Mcneil", "Bridges Macghabhann", "Eisenberg Samuel", "Thenna Daly", "Moina Mcmahon", "Gasper Whelan", "Hutt O''Keefe", "Quintin Names",
+//                "Towny Reynold", "Viviane Ceallachan", "Girovard Power", "Fanchon Flann", "Nickolai Meadhra", "Polash Login", "Cacilia Macghabhann", "Chaffee Rory", "Baseler Conchobhar",
+//                "Amathiste Cuidightheach", "Ishii Riagain", "Marieann Damhan", "Rangel Dubhain", "Alarick Fionn", "Humfrey Rory", "Mable O''Mooney", "Jemie Macdermott", "Hogen Rhys",
+//                "Cazzie Mohan", "Airlie Reynold", "Safire O''Hannigain", "Strephonn Nuallan", "Brion Eoghan", "Banquer Seaghdha", "Sedgewinn Mcguire", "Alma Macghabhann", "Durward Mcnab").collect(Collectors.toList());
+//    }
 }

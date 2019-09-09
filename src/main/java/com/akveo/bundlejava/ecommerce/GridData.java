@@ -3,14 +3,14 @@ package com.akveo.bundlejava.ecommerce;
 import java.util.List;
 
 public class GridData<DTO> {
-    private int totalCount;
+    private long totalCount;
     private List<DTO> items;
 
-    public int getTotalCount() {
+    public long getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(long totalCount) {
         this.totalCount = totalCount;
     }
 

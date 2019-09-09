@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class SpecificationBuilder {
 
-    private final List<SearchCriteria> params;
+    private List<SearchCriteria> params;
 
     public SpecificationBuilder() {
         params = new ArrayList<>();
@@ -37,6 +37,7 @@ public class SpecificationBuilder {
             with("value", ":", filter.getFilterByValue());
         }
         if (filter.getFilterByCountry() != null) {
+
             with("country", ":", filter.getFilterByCountry());
         }
         if (filter.getFilterByStatus() != null) {
@@ -48,6 +49,7 @@ public class SpecificationBuilder {
     }
 
     public Specification<Order> build(OrderGridFilter filter) {
+        params.clear();
         initParams(filter);
 
         if (params.size() == 0) {
@@ -57,7 +59,7 @@ public class SpecificationBuilder {
         Specification<Order> result = new OrderSpecification(params.get(0));
 
         for (int i = 1; i < params.size(); i++) {
-            result = Specification.where(result).or(new OrderSpecification(params.get(i)));
+            result = Specification.where(result).and(new OrderSpecification(params.get(i)));
         }
 
         return result;
