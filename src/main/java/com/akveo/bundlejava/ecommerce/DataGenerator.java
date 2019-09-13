@@ -10,10 +10,8 @@ import javax.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -62,7 +60,7 @@ public class DataGenerator {
     }
 
     private int generateRandomStatus() {
-        return generateInt(1, 3);
+        return generateInt(1, 2);
     }
 
     private int generateRandomType() {
@@ -74,12 +72,6 @@ public class DataGenerator {
         return value.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    //    string RandomValue()
-//    {
-//
-//        return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-//    }
-
     private void appendCountries(Map<String, String> countries) {
         sqlStatement.append("INSERT INTO country (code, name) VALUES");
         String countriesStatement = countries.entrySet().stream()
@@ -90,19 +82,62 @@ public class DataGenerator {
     }
 
     private void appendOrders() {
-        LocalDateTime startDate = LocalDateTime.of(2013, Month.JANUARY, 1, 1, 1);
+        LocalDateTime startDateSince2013 = LocalDateTime.of(2013, Month.JANUARY, 1, 1, 1);
         sqlStatement.append("INSERT INTO orders (name, created_date, updated_date, date, value, currency," +
                 " type, status, country_id, created_by_user_id, updated_by_user_id) VALUES ");
 
         String orderStr = Stream.generate(() -> 0)
-                .limit(2000)
+                .limit(generateInt(1500, 2000))
                 .map(entry -> "('Order " + generateInt(1, 20000) + "', '" +
                         getCurrentLocalDateTimeStamp() + "', '" + getCurrentLocalDateTimeStamp() + "', '" +
-                        generateRandomDate(startDate, null) + "', " +  generateRandomValue() + ", 'USD', " + generateRandomType()+ ", " +
+                        generateRandomDate(startDateSince2013, null) + "', " +
+                        generateRandomValue() + ", 'USD', " + generateRandomType() + ", " +
+                        generateRandomStatus() + ", " + generateInt(1, countries.size()) + ", " +
+                        CREATED_BY_USER_ID + ", " + UPDATED_BY_USER_ID + ")")
+                .collect(Collectors.joining(","));
+
+        sqlStatement.append(orderStr);
+        sqlStatement.append(',');
+
+        LocalDateTime startDateSince2014 = LocalDateTime.of(2014, Month.MAY, 1, 1, 1);
+        LocalDateTime endDateTill2016 = LocalDateTime.of(2016, Month.MAY, 1, 1, 1);
+        orderStr = Stream.generate(() -> 0)
+                .limit(generateInt(500, 800))
+                .map(entry -> "('Order " + generateInt(1, 20000) + "', '" +
+                        getCurrentLocalDateTimeStamp() + "', '" + getCurrentLocalDateTimeStamp() + "', '" +
+                        generateRandomDate(startDateSince2014, endDateTill2016) + "', " +
+                        generateRandomValue() + ", 'USD', " + generateRandomType() + ", " +
                         generateRandomStatus() + ", " + generateInt(1, countries.size()) + ", " +
                         CREATED_BY_USER_ID + ", " + UPDATED_BY_USER_ID + ")")
                 .collect(Collectors.joining(","));
         sqlStatement.append(orderStr);
+        sqlStatement.append(',');
+
+        LocalDateTime startDateSince2017 = LocalDateTime.of(2017, Month.JUNE, 1, 1, 1);
+        orderStr = Stream.generate(() -> 0)
+                .limit(generateInt(2000, 3000))
+                .map(entry -> "('Order " + generateInt(1, 20000) + "', '" +
+                        getCurrentLocalDateTimeStamp() + "', '" + getCurrentLocalDateTimeStamp() + "', '" +
+                        generateRandomDate(startDateSince2017, null) + "', " +
+                        generateRandomValue() + ", 'USD', " + generateRandomType() + ", " +
+                        generateRandomStatus() + ", " + generateInt(1, countries.size()) + ", " +
+                        CREATED_BY_USER_ID + ", " + UPDATED_BY_USER_ID + ")")
+                .collect(Collectors.joining(","));
+        sqlStatement.append(orderStr);
+        sqlStatement.append(',');
+
+        LocalDateTime startDateForLastThreeMonth = LocalDateTime.now().minusMonths(3);
+        orderStr = Stream.generate(() -> 0)
+                .limit(generateInt(1500, 1700))
+                .map(entry -> "('Order " + generateInt(1, 20000) + "', '" +
+                        getCurrentLocalDateTimeStamp() + "', '" + getCurrentLocalDateTimeStamp() + "', '" +
+                        generateRandomDate(startDateForLastThreeMonth, null) + "', " +
+                        generateRandomValue() + ", 'USD', " + generateRandomType() + ", " +
+                        generateRandomStatus() + ", " + generateInt(1, countries.size()) + ", " +
+                        CREATED_BY_USER_ID + ", " + UPDATED_BY_USER_ID + ")")
+                .collect(Collectors.joining(","));
+        sqlStatement.append(orderStr);
+
         sqlStatement.append(";");
     }
 
@@ -110,7 +145,8 @@ public class DataGenerator {
         sqlStatement.append("INSERT INTO user_activity (user_id, date, url) values ");
         String userActivitiesStr = Stream.generate(() -> 1)
                 .limit(1000)
-                .map(entry -> "(" + generateInt(1, 4) + ", '" + generateRandomDate(null, null) + "', 'url " +
+                .map(entry -> "(" + generateInt(1, 4) + ", '" +
+                        generateRandomDate(null, null) + "', 'url " +
                         generateInt(1, 50) + "')")
                 .collect(Collectors.joining(","));
         sqlStatement.append(userActivitiesStr);
@@ -121,7 +157,8 @@ public class DataGenerator {
         sqlStatement.append("INSERT INTO traffic (date, value) values ");
         String trafficStr = Stream.generate(() -> 0)
                 .limit(1000)
-                .map(entry -> "('" + generateRandomDate(null, null) + "', " + generateInt(1, 100) + ")")
+                .map(entry -> "('" + generateRandomDate(null, null) + "', " +
+                        generateInt(1, 100) + ")")
                 .collect(Collectors.joining(","));
         sqlStatement.append(trafficStr);
         sqlStatement.append(";");
@@ -137,7 +174,7 @@ public class DataGenerator {
         doSqlQuery(emf.createEntityManager());
     }
 
-    public void doSqlQuery(EntityManager entityManager) {
+    private void doSqlQuery(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery(sqlStatement.toString()).executeUpdate();
 
@@ -325,18 +362,4 @@ public class DataGenerator {
             put("ZWE", "Zimbabwe");
         }};
     }
-
-//    private static List<String> getNamesList(int count) {
-//        return Stream.of("Rostand Simon", "Petulia Samuel", "Bacon Mathghamhain", "Adlei Michael", "Damian IvorJohn", "Fredenburg Neil", "Strader O''Neal", "Meill Donnell", "Crowell O''Donnell",
-//                "Lenssen Rory", "Jac Names", "Budge Mahoney", "Bondy Simon", "Bilow Ahearn", "Weintrob Farrell", "Tristan Cathasach", "Baxy Bradach", "Utta Damhan", "Brag Treasach",
-//                "Vallie Kelly", "Trutko Aodha", "Mellins Cennetig", "Zurek Casey", "Star O''Neal", "Hoffer Names", "Sturges Macshuibhne", "Lifton Sioda", "Rochell Ahearn", "Lynsey Mcmahon",
-//                "Delp Seaghdha", "Sproul O''Brien", "Omar Ahearn", "Keriann Bhrighde", "Killoran Sullivan", "Olette Riagain", "Kohn Gorman", "Shimberg Maurice", "Nalda Aodh",
-//                "Livvie Casey", "Zoie Treasach", "Kletter Daly", "Sandy Mckay", "Ern O''Neal", "Loats Maciomhair", "Marlena Mulryan", "Hoshi Naoimhin", "Schmitt Whalen",
-//                "Patterson Raghailligh", "Ardeen Kelly", "Rasla Simon", "Douty Cennetig", "Giguere Names", "Dorina Clark", "Rothmuller Simon", "Shabbir Delaney", "Placidia Bradach",
-//                "Savior Keefe", "Concettina Maguire", "Malynda Muirchertach", "Vanzant Fearghal", "Schroder Ruaidh", "Ainslie Ciardha", "Richter Colman", "Gianni Macghabhann",
-//                "Norvan O''Boyle", "Polak Mcneil", "Bridges Macghabhann", "Eisenberg Samuel", "Thenna Daly", "Moina Mcmahon", "Gasper Whelan", "Hutt O''Keefe", "Quintin Names",
-//                "Towny Reynold", "Viviane Ceallachan", "Girovard Power", "Fanchon Flann", "Nickolai Meadhra", "Polash Login", "Cacilia Macghabhann", "Chaffee Rory", "Baseler Conchobhar",
-//                "Amathiste Cuidightheach", "Ishii Riagain", "Marieann Damhan", "Rangel Dubhain", "Alarick Fionn", "Humfrey Rory", "Mable O''Mooney", "Jemie Macdermott", "Hogen Rhys",
-//                "Cazzie Mohan", "Airlie Reynold", "Safire O''Hannigain", "Strephonn Nuallan", "Brion Eoghan", "Banquer Seaghdha", "Sedgewinn Mcguire", "Alma Macghabhann", "Durward Mcnab").collect(Collectors.toList());
-//    }
 }

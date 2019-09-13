@@ -1,5 +1,7 @@
 package com.akveo.bundlejava.ecommerce.entity.enums;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum OrderStatusEnum {
@@ -9,11 +11,16 @@ public enum OrderStatusEnum {
 
     private int value;
 
-    OrderStatusEnum(int value) { this.value = value; }
+    OrderStatusEnum(int value) {
+        this.value = value;
+    }
 
-    public int getValue() { return value; }
+    public int getValue() {
+        return value;
+    }
 
-        public static String[] names() {
+    public static String[] names() {
         return Stream.of(OrderStatusEnum.values()).map(OrderStatusEnum::name).toArray(String[]::new);
     }
+
 }

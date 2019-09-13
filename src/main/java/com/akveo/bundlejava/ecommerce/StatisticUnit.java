@@ -4,6 +4,15 @@ public class StatisticUnit<T> {
     private T value;
     private double trend;
 
+    public StatisticUnit(T value, double trend) {
+        this.value = value;
+        this.trend = trend;
+    }
+
+    public StatisticUnit() {
+    }
+
+
     public T getValue() {
         return value;
     }
